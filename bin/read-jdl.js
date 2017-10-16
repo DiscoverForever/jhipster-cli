@@ -27,8 +27,14 @@ function readJDLDir(targetPath) {
  * @param jdl 
  */
 function generateEntities (jdl) {
+  const entityTpl = require('../template/entity');
+  const hookTpl = require('../template/hook');
   jdl.entities.forEach(entity => {
-    fs.writeFileSync(path.join(__dirname, '../entities', `${entity.name}.js`), entity.name);
+    const entityTemplate = entityTpl.generateEntity(entity);
+    const hookTemplate = hookTpl.generateHook(entity);
+    console.log(entity)
+    fs.writeFileSync(path.join(__dirname, '../entities', `${entity.name}.g.ts`), entityTemplate);
+    fs.writeFileSync(path.join(__dirname, '../hook', `${entity.name}.hook.g.js`), hookTemplate);
   });
 }
 

@@ -4,7 +4,11 @@
   "description": "A simple cli for JDL",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test"
+    "test": "npm run test",
+    "start": "node bin/read-jdl.js"
+  },
+  "bin": {
+    "jdl": "bin/read-jdl.js"
   },
   "repository": {
     "type": "git",

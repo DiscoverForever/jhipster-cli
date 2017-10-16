@@ -5,7 +5,9 @@
 entity Task {
 	/**标题*/
 	title String,
-	description String
+	description String,
+	/**test获取*/
+	test Service
 }
 entity Region {
 	regionName String
