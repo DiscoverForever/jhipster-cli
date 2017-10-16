@@ -1,0 +1,24 @@
+{
+  "name": "jhipster-cli",
+  "version": "1.0.0",
+  "description": "A simple cli for JDL",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DiscoverForever/jhipster-cli.git"
+  },
+  "keywords": [
+    "cli",
+    "jhipster",
+    "jdl"
+  ],
+  "author": "tangyuxiaobao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DiscoverForever/jhipster-cli/issues"
+  },
+  "homepage": "https://github.com/DiscoverForever/jhipster-cli#readme"
+}
