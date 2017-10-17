@@ -7,6 +7,7 @@ function getProps(props) {
 }
 module.exports.generateEntity = entity => {
   return `
+  // generated at ${new Date().toLocaleString()}
   class ${entity.name} {
     ${getProps(entity.body)}
   }

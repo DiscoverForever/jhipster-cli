@@ -32,7 +32,8 @@ function generateEntities (jdl) {
   jdl.entities.forEach(entity => {
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHook(entity);
-    console.log(entity)
+    console.log(new Date().toLocaleString(),'generate file', path.join(__dirname, '../entities', `${entity.name}.g.ts`));
+    console.log(new Date().toLocaleString(),'generate file', path.join(__dirname, '../hook', `${entity.name}.hook.g.js`));
     fs.writeFileSync(path.join(__dirname, '../entities', `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(__dirname, '../hook', `${entity.name}.hook.g.js`), hookTemplate);
   });
