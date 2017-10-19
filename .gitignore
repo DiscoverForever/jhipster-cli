@@ -63,3 +63,7 @@ typings/
 
 # mac
 .DS_Store
+
+# generate file
+entities/
+hook/
