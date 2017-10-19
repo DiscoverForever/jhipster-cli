@@ -1,0 +1,172 @@
+/**订单 #group=销售管理 #index=20#templist=enum{uistate&paystate&shipstate&payType}|enum_op{uistate&shipstate}*/
+entity Order_Order {
+	/**单号#templist=title{单号：$}*/
+	orderno String
+	/**总价#templist=content{总价：$}*/
+    totalPrice Double required
+    /**运费*/
+    shippingPrice Double required 
+    /**区域*/
+    shippingRegion Ref_Region
+     /**区域#templist=content*/
+    shippingRegion_name RD_shippingRegion_name
+    /**开始时间*/
+    starttime RD_subline_starttime
+    /**收货人*/
+    shippingReceiverName String
+    /**收货人手机号*/
+    shippingReceiverPhone String
+    /**收货地址*/
+    shippingAddress_Id String
+    /**收货地址#templist=content*/
+    shippingAddress_name String
+    /**快递公司*/
+    shippingCompany String
+    /**快递单号#templist={快递单号 $}*/
+    shippingOrderNo String
+    /**支付渠道#templist=content{支付渠道 $}*/
+    payType Enum_PayType
+    /**客户*/
+    customer Ref_Customer
+    /**主图*/
+    logo RD_subline_sku_pic
+    /**商品名称#templist=headline*/
+    item_name RD_subline_sku_item_name
+    /**商品引用*/
+    item RD_subline_sku_item
+    /**分类*/
+    category_type RD_subline_sku_item_category_type
+    /**付款单*/
+    paymentOrder Ref_Payment
+    /**SKU*/
+    sku RD_subline_sku
+    /**供应商*/
+    supplier Ref_Supplier
+    /**店铺*/
+    store Ref_Store
+    /**技师*/
+    technician Ref_Technician
+}
+/** 支付渠道 */
+entity Enum_PayType {
+	/**支付宝*/
+	alipay Literal1,
+    /**微信*/
+    wechat Literal2,
+    /**储值卡*/
+    cardAccount Literal3
+}
+/**订单行*/
+entity Sub_Line {
+	/**商品*/
+	item RD_sku_item
+    /**服务形式*/
+    servicetype RD_sku_item_servicetype
+    /**分类*/
+    type RD_sku_item_category_type
+    /**SKU*/
+    sku Ref_SKU required
+    /**数量/时长*/
+    qty Integer required
+    /**成交价*/
+    linePrice Double required
+    /**原价*/
+	linePriceBeforeDiscounts Double required
+    /**成本价*/
+	unitCostPrice Double required
+    /**服务开始时间*/
+    starttime DateTime
+    /**服务要求*/
+    desc String
+}
+/**订单状态机*/
+entity StateMachine {
+	/**已提交*/
+	createsubmitted State1
+    /**已付款*/
+    createpaied State2
+    /**取消（支付前）*/
+    createcancled State3
+    /**已接单*/
+    shipreceivedorder State4
+    /**取消（配送）*/
+    shipcanceled State5
+    /**已发货*/
+    shipdispatch State6
+    /**完成*/
+    completefinish State8
+    /**申请退货*/
+    completereturning State9
+    /**结算中*/
+    completetopay State10
+    /**待收到退货（待确认）*/
+    completereturntoconfirm State11
+    /**关闭*/
+    completeclosed State12
+
+    /**支付*/
+    pay Createsubmitted_createpaied
+    /**接单*/
+    recieve Createpaied_shipreceivedorder
+    /**取消（支付前）*/
+    cancelbeforepay Createsubmitted_createcancled
+    /**取消（未接单）*/
+    cancelunreceived Createpaied_completetopay 
+    /**关闭（支付前）*/
+    closebeforepay Createcancled_completeclosed
+    /**发货*/
+    send Shipreceivedorder_shipdispatch
+    /**取消（配送前）*/
+    cancelbeforesend Shipreceivedorder_shipcanceled
+    /**取消（配送后）*/
+    cancelaftersend Shipdispatch_shipcanceled
+    /**确认取消（配送前）*/
+    confirmcancelbeforesend Shipcanceled_completetopay
+    /**确认收货*/
+    confirmsend Shipdispatch_completefinish
+    /**开始结算*/
+    startpay Completefinish_completetopay
+    /**关闭（结算）*/
+    close Completetopay_completeclosed
+    /**确认退货*/
+    confirmreturn Completereturntoconfirm_completetopay
+    /**提交退货申请*/
+    submitreturn Completefinish_completereturntoconfirm
+
+    /**作废-余额支付更新订单状态（增加参数到pay实现）*/
+    accountpay Service
+    /**提交（创建）订单*/
+    submit Service
+    /**查询订单*/
+    getById Service
+}
+/**客户状态*/
+entity MappedEnum_UIState{
+	/**待付款*/
+	toConfirm Createsubmitted
+    /**待收货*/
+    toRecive Createpaied_shipreceivedorder_shipdispatch
+}
+/**结算状态*/
+entity MappedEnum_PayState{
+	/**待结算*/
+	toPay Completefinish_completereturntoconfirm_completetopay
+    /**已结算*/
+    complatePay Completeclosed
+}
+/**发货状态*/
+entity MappedEnum_ShipState{
+	/**待发货*/
+	toShip Createpaied_shipreceivedorder_shipdispatch
+    /**已发货*/
+    completeShip Shipdispatch_completetopay_completefinish
+}
+/**订单排行*/
+entity SV_ranking{
+    /**订单类型*/
+    categoryType PM_Array_DTO required
+    /**排序类型*/
+    orderBy PM_String
+    /**升序降序*/
+    sortType PM_String
+}
