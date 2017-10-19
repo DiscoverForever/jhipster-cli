@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const core = require('jhipster-core');
 const parse = core.parse;
 const path = require('path');
