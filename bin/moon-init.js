@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const core = require('jhipster-core');
 const parse = core.parse;
 const path = require('path');
+const logger = require('../lib/logger');
 
 /**
  * 读取JDL文件
@@ -32,10 +33,10 @@ function generateEntities (jdl) {
   jdl.entities.forEach(entity => {
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHook(entity);
-    console.log(new Date().toLocaleString(),'generate file', path.join(__dirname, '../entities', `${entity.name}.g.ts`));
-    console.log(new Date().toLocaleString(),'generate file', path.join(__dirname, '../hook', `${entity.name}.hook.g.js`));
-    fs.writeFileSync(path.join(__dirname, '../entities', `${entity.name}.g.ts`), entityTemplate);
-    fs.writeFileSync(path.join(__dirname, '../hook', `${entity.name}.hook.g.js`), hookTemplate);
+    logger.info('generate file', path.join(__dirname, '../entities', `${entity.name}.g.ts`));
+    logger.info('generate file', path.join(__dirname, '../hook', `${entity.name}.hook.g.js`));
+    fs.writeFileSync(path.join(process.cwd(), '/entities/', `${entity.name}.g.ts`), entityTemplate);
+    fs.writeFileSync(path.join(process.cwd(), '/hook/', `${entity.name}.hook.g.js`), hookTemplate);
   });
 }
 
@@ -43,8 +44,8 @@ function generateEntities (jdl) {
  * 入口函数
  */
 function main() {
-  fs.mkdirSync(path.resolve(__dirname, '../', 'entities'));
-  fs.mkdirSync(path.resolve(__dirname, '../', 'hook'));
+  if (!fs.existsSync(path.join(process.cwd(), '/entities'))) fs.mkdirSync(path.join(process.cwd(), '/entities'));
+  if (!fs.existsSync(path.join(process.cwd(), '/hook'))) fs.mkdirSync(path.join(process.cwd(), '/hook'));
   let dirs = readJDLDir(path.join(__dirname, '../dsl'));
   dirs.map(fileName => {
     let jdl = readJDLFile(path.join(__dirname, '../dsl', fileName));
