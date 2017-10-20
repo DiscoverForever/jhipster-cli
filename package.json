@@ -8,7 +8,9 @@
     "start": "node bin/read-jdl.js"
   },
   "bin": {
-    "jdl": "bin/read-jdl.js"
+    "moon": "bin/moon.js",
+    "moon-init": "bin/moon-init.js",
+    "moon-export": "bin/moon-export.js"
   },
   "repository": {
     "type": "git",
