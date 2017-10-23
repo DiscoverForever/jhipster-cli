@@ -9,6 +9,8 @@ program
   .version('1.0.0')
   .usage('<entity-name>')
   .option('-e, --entityname <string>', 'a string argument')
+  .option('-ep, --entitypath <string>', 'jdl file path or jdl dir path')
+  .option('-t, --targetpath <string>', 'markdown file generate path')
   .parse(process.argv)
 
 
