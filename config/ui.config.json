@@ -1,0 +1,16 @@
+{
+  "from": [
+    {
+      "type": "text",
+      "label": "用户名",
+      "placeholder": "请输入用户名",
+      "required": true
+    },
+    {
+      "type": "password",
+      "label": "用户名",
+      "placeholder": "请输入用户名",
+      "required": true
+    }
+  ]
+}
