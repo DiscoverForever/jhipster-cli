@@ -10,7 +10,9 @@
   "bin": {
     "moon": "bin/moon.js",
     "moon-init": "bin/moon-init.js",
-    "moon-export": "bin/moon-export.js"
+    "moon-export": "bin/moon-export.js",
+    "moon-generate": "bin/moon-gen.js",
+    "moon-gen": "bin/moon-gen.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,7 @@
     "commander": "^2.11.0",
     "fs-extra": "^4.0.2",
     "jhipster-core": "^1.3.7",
-    "leanengine": "^2.0.5"
+    "leanengine": "^2.0.5",
+    "log4js": "^2.3.7"
   }
 }
