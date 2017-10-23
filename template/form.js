@@ -27,6 +27,7 @@ function getDependencies(configs, justComponent = false) {
   let set = new Set();
   configs.forEach(config => {
     if (config.tagName === 'button') set.add('XButton');
+    if (config.tagName === 'datetime') set.add('datetime');
     if (config.tagName === 'input') {
       set.add('Group');
       set.add('XInput');
@@ -48,9 +49,9 @@ function getDependencies(configs, justComponent = false) {
 function getDataOptions(configs) {
   let data = '';
   configs.forEach(config => {
-    if (config.tagName === 'input') data += `${config.model}:${config.defaultValue ? config.defaultValue : "''"},\n`;
-    if (config.tagName === 'datetime') data += `${config.model}:${config.defaultValue ? config.defaultValue : "''"},\n`;
-    if (config.tagName === 'address') data += `${config.model}:${config.defaultValue ? config.defaultValue : "''"},
+    if (config.tagName === 'input') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},\n`;
+    if (config.tagName === 'datetime') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},\n`;
+    if (config.tagName === 'address') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},
     ChinaAddressV4Data:ChinaAddressV4Data,`;
   });
   return data;
