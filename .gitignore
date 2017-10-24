@@ -70,3 +70,7 @@ hook/
 
 # jdl
 *.jdl
+
+# ide
+.idea
+.vscode
