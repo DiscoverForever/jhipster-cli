@@ -1,19 +1,25 @@
 
 function getStr(configs) {
   let data = '';
-  configs.forEach(config => {
-    if (config.tagName === 'input') data += `${config.withGroup === false ? '' : '<group>'}
-      <x-input title="${config.label}" type="${config.type}" v-model="${config.model}" placeholder="${config.placeholder}" ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} :required="${config.required}"></x-input>
-    ${config.withGroup === false ? '' : '</group>'}\n`
-    if (config.tagName === 'button') data += `${config.withGroup === false ? '' : '<group>'}
-      <x-button type="${config.type}" action-type="${config.actionType}">${config.text}</x-button>
-    ${config.withGroup === false ? '' : '</group>'}\n`;
-    if (config.tagName === 'address') data += `${config.withGroup === false ? '' : '<group>'}
-      <x-address title="${config.title}" v-model="${config.model}" :list="ChinaAddressV4Data"></x-address>
-    ${config.withGroup === false ? '' : '</group>'}\n`
-    if (config.tagName === 'datetime') data += `${config.withGroup === false ? '' : '<group>'}
-    <datetime v-model="${config.model}"  title="${config.title}"></datetime>
-    ${config.withGroup === false ? '' : '</group>'}\n`
+  configs.forEach((config, index) => {
+    // add group wrapper
+    if (config.withGroup === undefined || config.withGroup) data += `<group title="${config.title ? config.title : ''}" label-width="${config.labelWith ? config.labelWith : '5.5em'}" label-margin-right="${config.labelmarginRight ? config.labelmarginRight : '2em'}" label-align="${config.labelAlign ? config.labelAlign : 'justify'}">`;
+
+    if (config.tagName === 'XInput')
+      data += `<x-input title="${config.label}" type="${config.type}" v-model="${config.model}" placeholder="${config.placeholder}" ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} :required="${config.required}"></x-input>`;
+    if (config.tagName === 'XButton')
+      data += `<x-button type="${config.type}" action-type="${config.actionType}">${config.text}</x-button>`;
+    if (config.tagName === 'XAddress')
+      data += `<x-address title="${config.title}" v-model="${config.model}" :list="Private_ChinaAddressV4Data"></x-address>`;
+    if (config.tagName === 'Datetime')
+      data += `<datetime v-model="${config.model}"  title="${config.title}"></datetime>`;
+    // if (config.tagName === 'Actionsheet')
+    //   data += `<actionsheet v-model="${config.value}" :menus="${JSON.stringify(config.menus)}"  show-cancel="${config.showCancle}" @on-click-menu="(key, item)=>{}"></actionsheet>`;
+    if (config.tagName === 'Actionsheet')
+      data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{currentMenu${index}}}</cell>
+    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`
+    // add group wrapper
+    if (config.withGroup === undefined || config.withGroup) data += '</group>';
   });
   return data;
 }
@@ -26,35 +32,33 @@ function getStr(configs) {
 function getDependencies(configs, justComponent = false) {
   let set = new Set();
   configs.forEach(config => {
-    if (config.tagName === 'button') set.add('XButton');
-    if (config.tagName === 'datetime') set.add('datetime');
-    if (config.tagName === 'input') {
-      set.add('Group');
-      set.add('XInput');
-    }
-    if (config.tagName === 'address') {
-      if (!justComponent) set.add('ChinaAddressV4Data');
-      set.add('Group');
-      set.add('XAddress');
-    }
+    set.add(config.tagName);
+    if (config.tagName === 'XInput' || config.tagName === 'XAddress') set.add('Group');
+    if (config.tagName === 'XAddress' && !justComponent) set.add('ChinaAddressV4Data');
+    if (config.tagName === 'Actionsheet') set.add('Cell');
   });
+  // 去重
   let arr = Array.from(set);
   let data = '';
-  arr.forEach(item => {
-    data += `${item},`;
+  arr.forEach((item, index) => {
+    data += `${item}${index === arr.length - 1 ? '' : ','}`;
   });
   return data;
 }
 
 function getDataOptions(configs) {
   let data = '';
-  configs.forEach(config => {
-    if (config.tagName === 'input') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},\n`;
-    if (config.tagName === 'datetime') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},\n`;
-    if (config.tagName === 'address') data += `${config.model}:${config.defaultValue.toString() ? config.defaultValue : "''"},
-    ChinaAddressV4Data:ChinaAddressV4Data,`;
+  configs.forEach((config, index) => {
+    if (config.tagName === 'XInput') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'Datetime') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'XAddress') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_ChinaAddressV4Data:ChinaAddressV4Data,`;
+    if (config.tagName === 'Actionsheet') data += `currentMenu${index}:'',Private_isShowActionsheet${index}: false`;
   });
   return data;
+}
+
+function getMethods(configs) {
+
 }
 /**
  * 生成表单
