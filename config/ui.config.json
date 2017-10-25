@@ -1,16 +1,70 @@
 {
-  "from": [
+  "form": [
     {
+      "tagName": "XInput",
+      "modelName": "username",
       "type": "text",
       "label": "用户名",
+      "defaultValue": "",
+      "max": 6,
       "placeholder": "请输入用户名",
       "required": true
     },
     {
+      "tagName": "XInput",
+      "modelName": "password",
       "type": "password",
-      "label": "用户名",
-      "placeholder": "请输入用户名",
+      "max": 6,
+      "label": "密码",
+      "defaultValue": "",
+      "placeholder": "请输入密码",
       "required": true
+    },
+    {
+      "tagName": "XButton",
+      "type": "primary",
+      "actionType": "XButton",
+      "text": "登录"
+    },
+    {
+      "tagName": "XAddress",
+      "title": "title",
+      "modelName": "XAddress",
+      "defaultValue": [],
+      "placeholder": "请选择地址"
+    },
+    {
+      "tagName": "Datetime",
+      "title": "Datetime",
+      "modelName": "time",
+      "defaultValue": "2017-09-09"
+    },
+    {
+      "tagName": "Actionsheet",
+      "defaultValue": 1,
+      "valueName": "currntMenu",
+      "cellTitle": "选择枚举",
+      "showCancle": "true",
+      "cancelText": "关闭",
+      "menus": [1,2,3]
+    },
+    {
+      "tagName": "XNumber",
+      "valueName": "qty",
+      "defaultValue": "1",
+      "title": "数量",
+      "min": 0,
+      "max": 5
+    },
+    {
+      "tagName": "XHeader",
+      "title": "i am title"
+    },
+    {
+      "tagName": "Calendar",
+      "groupTitle": "日历",
+      "placeholder": "placeholder",
+      "modelName": "currntTime"
     }
   ]
 }

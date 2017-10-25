@@ -3,21 +3,22 @@ function getStr(configs) {
   let data = '';
   configs.forEach((config, index) => {
     // add group wrapper
-    if (config.withGroup === undefined || config.withGroup) data += `<group title="${config.title ? config.title : ''}" label-width="${config.labelWith ? config.labelWith : '5.5em'}" label-margin-right="${config.labelmarginRight ? config.labelmarginRight : '2em'}" label-align="${config.labelAlign ? config.labelAlign : 'justify'}">`;
+    if (config.withGroup === undefined || config.withGroup) data += `<group title="${config.groupTitle ? config.groupTitle : ''}" label-width="${config.labelWith ? config.labelWith : '5.5em'}" label-margin-right="${config.labelmarginRight ? config.labelmarginRight : '2em'}" label-align="${config.labelAlign ? config.labelAlign : 'justify'}">`;
 
     if (config.tagName === 'XInput')
-      data += `<x-input title="${config.label}" type="${config.type}" v-model="${config.model}" placeholder="${config.placeholder}" ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} :required="${config.required}"></x-input>`;
+      data += `<x-input title="${config.label}" type="${config.type}" v-model="${config.modelName}" placeholder="${config.placeholder}" ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} :required="${config.required}"></x-input>`;
     if (config.tagName === 'XButton')
       data += `<x-button type="${config.type}" action-type="${config.actionType}">${config.text}</x-button>`;
     if (config.tagName === 'XAddress')
-      data += `<x-address title="${config.title}" v-model="${config.model}" :list="Private_ChinaAddressV4Data"></x-address>`;
+      data += `<x-address title="${config.title}" v-model="${config.modelName}" :list="Private_ChinaAddressV4Data"></x-address>`;
     if (config.tagName === 'Datetime')
-      data += `<datetime v-model="${config.model}"  title="${config.title}"></datetime>`;
+      data += `<datetime v-model="${config.modelName}"  title="${config.title}"></datetime>`;
     if (config.tagName === 'Actionsheet')
-    data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{currentMenu${index}}}</cell>
-  <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`;
-    if (config.tagName === 'XNumber')
-    data += `<x-number :value="${config.valueName}" :min="${config.min ? config.min : 0}" :max="${config.max ? config.max : 1000}" button-style="${config.btnStyle ? config.btnStyle : 'square'}" title="${config.title}" fillable></x-number>`;
+      data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{${config.valueName}}}</cell>
+    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => ${config.valueName} = item"></actionsheet>`;
+    if (config.tagName === 'XHeader') data += `<x-header>${config.title}</x-header>`;
+    if (config.tagName === 'Calendar') data += `<calendar v-model="${config.modelName}" title="${config.title ? config.title : ''}" disable-past placeholder="${config.placeholder}" @on-show="log('show')" @on-hide="log('hide')"></calendar>`;
+    if (config.tagName === 'XNumber') data += `<x-number :value="${config.valueName}" :min="${config.min ? config.min : 0}" :max="${config.max ? config.max : 1000}" button-style="${config.btnStyle ? config.btnStyle : 'square'}" title="${config.title}" fillable></x-number>`;
     // add group wrapper
     if (config.withGroup === undefined || config.withGroup) data += '</group>';
   });
@@ -33,8 +34,11 @@ function getDependencies(configs, justComponent = false) {
   let set = new Set();
   configs.forEach(config => {
     set.add(config.tagName);
-    if (config.tagName === 'XInput' || config.tagName === 'XAddress' || config.tagName === 'XNumber') set.add('Group');
+    // need group wrapper
+    if (config.tagName === 'XInput' || config.tagName === 'XAddress') set.add('Group');
+    // need other dependence
     if (config.tagName === 'XAddress' && !justComponent) set.add('ChinaAddressV4Data');
+    // need other component
     if (config.tagName === 'Actionsheet') set.add('Cell');
   });
   // 去重
@@ -49,11 +53,11 @@ function getDependencies(configs, justComponent = false) {
 function getDataOptions(configs) {
   let data = '';
   configs.forEach((config, index) => {
-    if (config.tagName === 'XInput') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
-    if (config.tagName === 'Datetime') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
-    if (config.tagName === 'XAddress') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_ChinaAddressV4Data:ChinaAddressV4Data,`;
-    if (config.tagName === 'Actionsheet') data += `currentMenu${index}:'',Private_isShowActionsheet${index}: false,`;
-    if (config.tagName === 'XNumber') data += `${config.valueName}:${config.defaultValue ? config.defaultValue : 0},`;
+    if (config.tagName === 'XInput') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'Datetime') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'XAddress') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_ChinaAddressV4Data:ChinaAddressV4Data,`;
+    if (config.tagName === 'Calendar') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'Actionsheet') data += `${config.valueName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_isShowActionsheet${index}: false,`;
   });
   return data;
 }
