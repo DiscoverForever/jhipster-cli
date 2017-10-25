@@ -1,16 +1,58 @@
 {
-  "from": [
+  "form": [
     {
+      "tagName": "XInput",
+      "model": "username",
       "type": "text",
       "label": "用户名",
+      "defaultValue": "",
+      "max": 6,
       "placeholder": "请输入用户名",
       "required": true
     },
     {
+      "tagName": "XInput",
+      "model": "password",
       "type": "password",
-      "label": "用户名",
-      "placeholder": "请输入用户名",
+      "max": 6,
+      "label": "密码",
+      "defaultValue": "",
+      "placeholder": "请输入密码",
       "required": true
+    },
+    {
+      "tagName": "XButton",
+      "type": "primary",
+      "actionType": "XButton",
+      "text": "登录"
+    },
+    {
+      "tagName": "XAddress",
+      "title": "title",
+      "model": "XAddress",
+      "defaultValue": [],
+      "placeholder": "请选择地址"
+    },
+    {
+      "tagName": "Datetime",
+      "title": "Datetime",
+      "model": "time",
+      "defaultValue": "2017-09-09"
+    },
+    {
+      "tagName": "Actionsheet",
+      "value": "",
+      "cellTitle": "选择枚举",
+      "showCancle": "true",
+      "cancelText": "关闭",
+      "menus": [1,2,3]
+    },
+    {
+      "tagName": "XNumber",
+      "valueName": "qty",
+      "defaultValue": "1",
+      "min": 0,
+      "max": 5
     }
   ]
 }
