@@ -13,11 +13,10 @@ function getStr(configs) {
       data += `<x-address title="${config.title}" v-model="${config.model}" :list="Private_ChinaAddressV4Data"></x-address>`;
     if (config.tagName === 'Datetime')
       data += `<datetime v-model="${config.model}"  title="${config.title}"></datetime>`;
-    // if (config.tagName === 'Actionsheet')
-    //   data += `<actionsheet v-model="${config.value}" :menus="${JSON.stringify(config.menus)}"  show-cancel="${config.showCancle}" @on-click-menu="(key, item)=>{}"></actionsheet>`;
     if (config.tagName === 'Actionsheet')
       data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{currentMenu${index}}}</cell>
-    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`
+    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`;
+    if (config.tagName === 'XHeader') data += `<x-header>${config.title}</x-header>`
     // add group wrapper
     if (config.withGroup === undefined || config.withGroup) data += '</group>';
   });
