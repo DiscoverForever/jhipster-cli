@@ -13,11 +13,11 @@ function getStr(configs) {
       data += `<x-address title="${config.title}" v-model="${config.model}" :list="Private_ChinaAddressV4Data"></x-address>`;
     if (config.tagName === 'Datetime')
       data += `<datetime v-model="${config.model}"  title="${config.title}"></datetime>`;
-    // if (config.tagName === 'Actionsheet')
-    //   data += `<actionsheet v-model="${config.value}" :menus="${JSON.stringify(config.menus)}"  show-cancel="${config.showCancle}" @on-click-menu="(key, item)=>{}"></actionsheet>`;
     if (config.tagName === 'Actionsheet')
-      data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{currentMenu${index}}}</cell>
-    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`
+    data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{currentMenu${index}}}</cell>
+  <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => currentMenu${index} = item"></actionsheet>`;
+    if (config.tagName === 'XNumber')
+    data += `<x-number :value="${config.valueName}" :min="${config.min ? config.min : 0}" :max="${config.max ? config.max : 1000}" button-style="${config.btnStyle ? config.btnStyle : 'square'}" title="${config.title}" fillable></x-number>`;
     // add group wrapper
     if (config.withGroup === undefined || config.withGroup) data += '</group>';
   });
@@ -33,7 +33,7 @@ function getDependencies(configs, justComponent = false) {
   let set = new Set();
   configs.forEach(config => {
     set.add(config.tagName);
-    if (config.tagName === 'XInput' || config.tagName === 'XAddress') set.add('Group');
+    if (config.tagName === 'XInput' || config.tagName === 'XAddress' || config.tagName === 'XNumber') set.add('Group');
     if (config.tagName === 'XAddress' && !justComponent) set.add('ChinaAddressV4Data');
     if (config.tagName === 'Actionsheet') set.add('Cell');
   });
@@ -52,7 +52,8 @@ function getDataOptions(configs) {
     if (config.tagName === 'XInput') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
     if (config.tagName === 'Datetime') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
     if (config.tagName === 'XAddress') data += `${config.model}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_ChinaAddressV4Data:ChinaAddressV4Data,`;
-    if (config.tagName === 'Actionsheet') data += `currentMenu${index}:'',Private_isShowActionsheet${index}: false`;
+    if (config.tagName === 'Actionsheet') data += `currentMenu${index}:'',Private_isShowActionsheet${index}: false,`;
+    if (config.tagName === 'XNumber') data += `${config.valueName}:${config.defaultValue ? config.defaultValue : 0},`;
   });
   return data;
 }
