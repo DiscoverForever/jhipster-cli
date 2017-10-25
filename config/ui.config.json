@@ -2,7 +2,7 @@
   "form": [
     {
       "tagName": "XInput",
-      "model": "username",
+      "modelName": "username",
       "type": "text",
       "label": "用户名",
       "defaultValue": "",
@@ -12,7 +12,7 @@
     },
     {
       "tagName": "XInput",
-      "model": "password",
+      "modelName": "password",
       "type": "password",
       "max": 6,
       "label": "密码",
@@ -29,19 +29,20 @@
     {
       "tagName": "XAddress",
       "title": "title",
-      "model": "XAddress",
+      "modelName": "XAddress",
       "defaultValue": [],
       "placeholder": "请选择地址"
     },
     {
       "tagName": "Datetime",
       "title": "Datetime",
-      "model": "time",
+      "modelName": "time",
       "defaultValue": "2017-09-09"
     },
     {
       "tagName": "Actionsheet",
-      "value": "",
+      "defaultValue": 1,
+      "valueName": "currntMenu",
       "cellTitle": "选择枚举",
       "showCancle": "true",
       "cancelText": "关闭",
@@ -51,8 +52,19 @@
       "tagName": "XNumber",
       "valueName": "qty",
       "defaultValue": "1",
+      "title": "数量",
       "min": 0,
       "max": 5
+    },
+    {
+      "tagName": "XHeader",
+      "title": "i am title"
+    },
+    {
+      "tagName": "Calendar",
+      "groupTitle": "日历",
+      "placeholder": "placeholder",
+      "modelName": "currntTime"
     }
   ]
 }
