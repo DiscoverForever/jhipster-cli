@@ -13,6 +13,8 @@ function getStr(configs) {
       data += `<x-address title="${config.title}" v-model="${config.modelName}" :list="Private_ChinaAddressV4Data"></x-address>`;
     if (config.tagName === 'Datetime')
       data += `<datetime v-model="${config.modelName}"  title="${config.title}"></datetime>`;
+    if (config.tagName === 'Tab')
+      data += `<tab><tab-item :selected="index === 0" @on-item-click="Private_crrrentTabItem = index" :key="index" v-for="(item, index) in ${JSON.stringify(config.tabItems).replace(/"/g, "'")}">{{item}}</tab-item></tab>`;
     if (config.tagName === 'Actionsheet')
       data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{${config.valueName}}}</cell>
     <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => ${config.valueName} = item"></actionsheet>`;
@@ -40,6 +42,7 @@ function getDependencies(configs, justComponent = false) {
     if (config.tagName === 'XAddress' && !justComponent) set.add('ChinaAddressV4Data');
     // need other component
     if (config.tagName === 'Actionsheet') set.add('Cell');
+    if (config.tagName === 'Tab') set.add('TabItem');
   });
   // 去重
   let arr = Array.from(set);
@@ -57,7 +60,9 @@ function getDataOptions(configs) {
     if (config.tagName === 'Datetime') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
     if (config.tagName === 'XAddress') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_ChinaAddressV4Data:ChinaAddressV4Data,`;
     if (config.tagName === 'Calendar') data += `${config.modelName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
+    if (config.tagName === 'XNumber') data += `${config.valueName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},`;
     if (config.tagName === 'Actionsheet') data += `${config.valueName}:${config.defaultValue ? JSON.stringify(config.defaultValue).replace(/"/g, "'") : "''"},Private_isShowActionsheet${index}: false,`;
+    if (config.tagName === 'Tab') data += `Private_crrrentTabItem : 0,`;
   });
   return data;
 }

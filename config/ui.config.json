@@ -51,7 +51,7 @@
     {
       "tagName": "XNumber",
       "valueName": "qty",
-      "defaultValue": "1",
+      "defaultValue": 1,
       "title": "数量",
       "min": 0,
       "max": 5
@@ -65,6 +65,11 @@
       "groupTitle": "日历",
       "placeholder": "placeholder",
       "modelName": "currntTime"
+    },
+    {
+      "tagName": "Tab",
+      "groupTitle": "Tab",
+      "tabItems": ["全部", "待付款", "待发货", "待收货"]
     }
   ]
 }
