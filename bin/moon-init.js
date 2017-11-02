@@ -5,9 +5,8 @@ const path = require('path');
 const logger = require('../lib/logger');
 const utils = require('../lib/utils');
 const program = require('commander');
-const download = require('download-git-repo');
 const CWD = process.cwd();
-const ora = require('ora')
+
 program
   .usage('<path>')
   .option('-p, --jdlpath <string>', 'jdl file or jdl dir path')
@@ -22,44 +21,42 @@ function generateEntities(jdl) {
   const entityTpl = require('../template/entity');
   const hookTpl = require('../template/hook');
   jdl.entities.forEach(entity => {
+    logger.info(entity)
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHook(entity);
-    logger.info('generate file', path.join(CWD, '../entities', `${entity.name}.g.ts`));
-    logger.info('generate file', path.join(CWD, '../hook', `${entity.name}.hook.g.js`));
-    fs.writeFileSync(path.join(CWD, '/entities/', `${entity.name}.g.ts`), entityTemplate);
-    fs.writeFileSync(path.join(CWD, '/hook/', `${entity.name}.hook.g.js`), hookTemplate);
+    logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
+    logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
+    fs.writeFileSync(path.join(CWD, 'frontend/src/components/entities', `${entity.name}.g.ts`), entityTemplate);
+    fs.writeFileSync(path.join(CWD, 'backend/entities/', `${entity.name}.g.ts`), entityTemplate);
+    fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
   });
 }
 
-/**
- * 下载并生成leancloud云引擎
- */
-function downloadAndGenerateLeanengine() {
-    download('https://github.com/leancloud/node-js-getting-started', 'test/tmp', { clone: true }, function (err) {
-        console.log(err)
-    })
-}
+
 
 /**
  * 入口函数
  */
-function main(jdlpath) {
-    const spinner = ora('download template').start();
-    spinner.start();
-    // downloadAndGenerateLeanengine();
-  // if (!fs.existsSync(path.join(CWD, '/entities'))) fs.mkdirSync(path.join(CWD, '/entities'));
-  // if (!fs.existsSync(path.join(CWD, '/hook'))) fs.mkdirSync(path.join(CWD, '/hook'));
-  // if (fs.statSync(jdlpath).isDirectory()) {
-  //   let dirs = utils.readJDLDir(path.join(CWD, jdlpath));
-  //   dirs.map(fileName => {
-  //     let jdl = utils.readJDLFile(path.join(CWD, jdlpath, fileName));
-  //     generateEntities(jdl);
-  //   });
-  // }
-  // if (fs.statSync(jdlpath).isFile()) {
-  //   let jdl = utils.readJDLFile(path.join(CWD, jdlpath));
-  //   generateEntities(jdl);
-  // }
+async function main(jdlpath) {
+  // download leanengine
+  await utils.downloadGitRep('leancloud/node-js-getting-started', path.join(CWD, 'backend'));
+  // download vux
+  await utils.downloadGitRep('discoverforever/vux-template', path.join(CWD, 'frontend'));
+
+  if (!fs.existsSync(path.join(CWD, 'frontend/src/components/entities'))) fs.mkdirSync(path.join(CWD, 'frontend/src/components/entities'));
+  if (!fs.existsSync(path.join(CWD, 'backend/entities'))) fs.mkdirSync(path.join(CWD, 'backend/entities'));
+  if (!fs.existsSync(path.join(CWD, 'backend/hook'))) fs.mkdirSync(path.join(CWD, 'backend/hook'));
+  if (fs.statSync(jdlpath).isDirectory()) {
+    let dirs = utils.readJDLDir(path.join(CWD, jdlpath));
+    dirs.map(fileName => {
+      let jdl = utils.readJDLFile(path.join(CWD, jdlpath, fileName));
+      generateEntities(jdl);
+    });
+  }
+  if (fs.statSync(jdlpath).isFile()) {
+    let jdl = utils.readJDLFile(path.join(CWD, jdlpath));
+    generateEntities(jdl);
+  }
   
 }
 
