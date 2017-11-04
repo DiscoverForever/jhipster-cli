@@ -20,7 +20,7 @@ function getInput(prop, type) {
 function getActionsheet(prop, enu, index) {
   return {
     tagName: 'Actionsheet',
-    defaultValue: 1,
+    defaultValue: enu.values[0],
     valueName: `currntMenu${index}`,
     cellTitle: prop.name,
     showCancle: true,
@@ -42,6 +42,17 @@ function getDatetime(prop, index) {
   };
 }
 
+function getAddress(prop, index) {
+  return {
+    tagName: 'XAddress',
+    title: prop.name,
+    modelName: prop.name,
+    defaultValue: [],
+    placeholder: "请选择地址",
+    groupTitle: prop.javadoc,
+  };
+}
+
 module.exports.generateUiMata = function (entity, enums) {
   let obj = { form: [] };
   let enumNames = enums.map(enu => enu.name);
@@ -50,6 +61,7 @@ module.exports.generateUiMata = function (entity, enums) {
     if (prop.type === 'Service') return;
     if (prop.type === 'String') item = getInput(prop, 'text');
     if (prop.type === 'Date' || prop.type === 'Date') item = getDatetime(prop, index);
+    if (prop.type === 'Address') item = getAddress(prop, index);
     if (prop.type === 'Integer' || prop.type === 'Long' || prop.type === 'BigDecimal' || prop.type === 'Float' || prop.type === 'Double' || prop.type === 'Float' || prop.type === 'Float') item = getInput(prop, 'number');
     if (enumNames.includes(prop.type)) {
       item = getActionsheet(prop, enums.find(enu => enu.name === prop.type), index);
