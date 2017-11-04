@@ -20,15 +20,18 @@ program
 function generateEntities(jdl) {
   const entityTpl = require('../template/entity');
   const hookTpl = require('../template/hook');
+  const uiMataTpl = require('../template/ui.mata');
   jdl.entities.forEach(entity => {
-    logger.info(entity)
+    logger.info(JSON.stringify(jdl))
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHook(entity);
+    const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
     fs.writeFileSync(path.join(CWD, 'frontend/src/components/entities', `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(CWD, 'backend/entities/', `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
+    fs.writeFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
   });
 }
 
@@ -46,6 +49,7 @@ async function main(jdlpath) {
   if (!fs.existsSync(path.join(CWD, 'frontend/src/components/entities'))) fs.mkdirSync(path.join(CWD, 'frontend/src/components/entities'));
   if (!fs.existsSync(path.join(CWD, 'backend/entities'))) fs.mkdirSync(path.join(CWD, 'backend/entities'));
   if (!fs.existsSync(path.join(CWD, 'backend/hook'))) fs.mkdirSync(path.join(CWD, 'backend/hook'));
+  if (!fs.existsSync(path.join(CWD, 'uimata'))) fs.mkdirSync(path.join(CWD, 'uimata'));
   if (fs.statSync(jdlpath).isDirectory()) {
     let dirs = utils.readJDLDir(path.join(CWD, jdlpath));
     dirs.map(fileName => {
