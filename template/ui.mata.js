@@ -7,7 +7,8 @@ function getInput(prop, type) {
     label: prop.name,
     defaultValue: '',
     max: 6,
-    placeholder: prop.javadoc
+    placeholder: prop.javadoc,
+    groupTitle: prop.javadoc,
   };
   prop.validations.forEach(validation => {
     if (validation.key === 'required') validation.value = true;
@@ -24,8 +25,21 @@ function getActionsheet(prop, enu, index) {
     cellTitle: prop.name,
     showCancle: true,
     cancelText: '关闭',
-    menus: enu.values
+    menus: enu.values,
+    groupTitle: prop.javadoc,
+    
   }
+}
+
+function getDatetime(prop, index) {
+  return {
+    tagName: 'Datetime',
+    title: prop.name,
+    modelName: prop.name,
+    defaultValue: new Date().toLocaleDateString(),
+    groupTitle: prop.javadoc,
+    
+  };
 }
 
 module.exports.generateUiMata = function (entity, enums) {
@@ -35,6 +49,7 @@ module.exports.generateUiMata = function (entity, enums) {
     let item;
     if (prop.type === 'Service') return;
     if (prop.type === 'String') item = getInput(prop, 'text');
+    if (prop.type === 'Date' || prop.type === 'Date') item = getDatetime(prop, index);
     if (prop.type === 'Integer' || prop.type === 'Long' || prop.type === 'BigDecimal' || prop.type === 'Float' || prop.type === 'Double' || prop.type === 'Float' || prop.type === 'Float') item = getInput(prop, 'number');
     if (enumNames.includes(prop.type)) {
       item = getActionsheet(prop, enums.find(enu => enu.name === prop.type), index);
