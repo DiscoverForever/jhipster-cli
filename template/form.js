@@ -6,7 +6,7 @@ function getStr(configs) {
     if (config.withGroup === undefined || config.withGroup) data += `<group title="${config.groupTitle ? config.groupTitle : ''}" label-width="${config.labelWith ? config.labelWith : '5.5em'}" label-margin-right="${config.labelmarginRight ? config.labelmarginRight : '2em'}" label-align="${config.labelAlign ? config.labelAlign : 'justify'}">`;
 
     if (config.tagName === 'XInput')
-      data += `<x-input title="${config.label}" type="${config.type}" v-model="${config.modelName}" placeholder="${config.placeholder}" ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} :required="${config.required}"></x-input>`;
+      data += `<x-input title="${config.label}" type="${config.type}" v-model="${config.modelName}" ${config.placeholder ? `placeholder="${config.placeholder}"`: ''} ${config.min ? `:min="${config.min}"` : ''} ${config.max ? `:max="${config.max}"` : ''} ${config.required ? ':required="true"' : ''}></x-input>`;
     if (config.tagName === 'XButton')
       data += `<x-button type="${config.type}" action-type="${config.actionType}">${config.text}</x-button>`;
     if (config.tagName === 'XAddress')
@@ -17,7 +17,7 @@ function getStr(configs) {
       data += `<tab><tab-item :selected="index === 0" @on-item-click="Private_crrrentTabItem = index" :key="index" v-for="(item, index) in ${JSON.stringify(config.tabItems).replace(/"/g, "'")}">{{item}}</tab-item></tab>`;
     if (config.tagName === 'Actionsheet')
       data += `<cell title="${config.cellTitle ? config.cellTitle : '选择'}" @click.native="Private_isShowActionsheet${index} = !Private_isShowActionsheet${index}">{{${config.valueName}}}</cell>
-    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus)}" :show-cancel="true" @on-click-menu="(key, item) => ${config.valueName} = item"></actionsheet>`;
+    <actionsheet v-model="Private_isShowActionsheet${index}" :menus="${JSON.stringify(config.menus).replace(/"/g, "'")}" :show-cancel="true" @on-click-menu="(key, item) => ${config.valueName} = item"></actionsheet>`;
     if (config.tagName === 'XHeader') data += `<x-header>${config.title}</x-header>`;
     if (config.tagName === 'Calendar') data += `<calendar v-model="${config.modelName}" title="${config.title ? config.title : ''}" disable-past placeholder="${config.placeholder}" @on-show="log('show')" @on-hide="log('hide')"></calendar>`;
     if (config.tagName === 'XNumber') data += `<x-number :value="${config.valueName}" :min="${config.min ? config.min : 0}" :max="${config.max ? config.max : 1000}" button-style="${config.btnStyle ? config.btnStyle : 'square'}" title="${config.title}" fillable></x-number>`;
