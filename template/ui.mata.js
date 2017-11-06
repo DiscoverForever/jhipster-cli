@@ -5,7 +5,7 @@ function getInput(prop, type) {
     modelName: prop.name,
     type: type,
     label: prop.name,
-    defaultValue: '',
+    defaultValue: type === 'number' ? 1 : '',
     max: 6,
     placeholder: prop.javadoc,
     groupTitle: prop.javadoc,
