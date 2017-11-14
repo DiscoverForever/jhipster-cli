@@ -35,7 +35,7 @@ function run(UIConfigPath) {
   if (UIConfigPath && fs.existsSync(path.join(cwd, UIConfigPath))) {
     if (fs.statSync(path.join(cwd, UIConfigPath)).isFile()) {
       const UIConfig = JSON.parse(fs.readFileSync(path.join(cwd, UIConfigPath)).toString());
-      const UIConfigFileName =UIConfigPath.replace(/(.*\/)*([^.]+).*/ig,"$2");
+      const UIConfigFileName = UIConfigPath.replace(/(.*\/)*([^.]+).*/ig,"$2");
       generateVueComponent(UIConfig, UIConfigFileName);
     } else {
       logger.warn('please provide a valide file');
