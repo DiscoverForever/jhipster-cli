@@ -67,7 +67,7 @@ module.exports.generateUiMata = function (entity, enums) {
     if (enumNames.includes(prop.type)) {
       item = getActionsheet(prop, enums.find(enu => enu.name === prop.type), index);
     }
-    obj.form.push(item);
+    if (item) obj.form.push(item);
   });
 
 
