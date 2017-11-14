@@ -5,6 +5,7 @@ const path = require('path');
 const logger = require('../lib/logger');
 const utils = require('../lib/utils');
 const program = require('commander');
+const spawn = require('child_process').spawn;
 const CWD = process.cwd();
 
 program
@@ -28,14 +29,26 @@ function generateEntities(jdl) {
     const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
-    fs.writeFileSync(path.join(CWD, 'frontend/src/components/entities', `${entity.name}.g.ts`), entityTemplate);
+    fs.mkdirSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`));
+    fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), entityTemplate);
+    fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
     fs.writeFileSync(path.join(CWD, 'backend/entities/', `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
     fs.writeFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
+
+    generateEntityComponent(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`))
   });
 }
 
+function generateEntityComponent(uiConfigPath) {
+  logger.info(uiConfigPath);
+  const child = spawn('moon', ['generate', '-c', uiConfigPath]);
+  // const child = spawn('vue', ['init', 'webpack', 'ttt']);
+  process.stdin.pipe(child.stdin);
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
 
+}
 
 /**
  * 入口函数
