@@ -6,6 +6,7 @@ const logger = require('../lib/logger');
 const utils = require('../lib/utils');
 const program = require('commander');
 const spawn = require('child_process').spawn;
+const exec = require('child_process').exec;
 const CWD = process.cwd();
 
 program
@@ -36,14 +37,13 @@ function generateEntities(jdl) {
     fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
     fs.writeFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
 
-    generateEntityComponent(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`))
+    generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
   });
 }
 
-function generateEntityComponent(uiConfigPath) {
-  logger.info(uiConfigPath);
-  const child = spawn('moon', ['generate', '-c', uiConfigPath]);
-  // const child = spawn('vue', ['init', 'webpack', 'ttt']);
+function generateEntityComponent(uiMataName, uiMataPath) {
+  logger.info(uiMataPath);
+  const child = spawn('moon', ['generate', '-c', uiMataName], { cwd : uiMataPath});
   process.stdin.pipe(child.stdin);
   child.stdout.pipe(process.stdout);
   child.stderr.pipe(process.stderr);
