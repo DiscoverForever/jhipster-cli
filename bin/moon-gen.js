@@ -30,28 +30,38 @@ function generateVueComponent(UIConfig, componentName) {
 }
 
 function generateVueRouter(dirPath) {
-  let routes = [];
+  // let routes = [];
 
-  fs.readdirSync(path.join(cwd, dirPath)).forEach((dirName) => {
-    let route = {
-      path: `/${dirPath}/${dirName}`,
-      name: `${dirPath}/${dirName}`,
+  // fs.readdirSync(path.join(cwd, dirPath)).forEach((dirName) => {
+  //   let route = 
+  //   routes.push(route);
+  // });
+  // todo 处理路径 ／user
+  let vueFileList = getDirFilePath(path.join(cwd, dirPath));
+  let routes = vueFileList.map(fileName => {
+    return {
+      path: fileName,
+      name: fileName,
       meta: { login: true, keepAlive: false },
-      component: `() => import('../../src/components/${dirName}')`
+      component: `() => import('../../src/components/${fileName}')`
     };
-    routes.push(route);
   });
-  fs.writeFileSync(path.join(cwd, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
+  fs.writeFileSync(path.join(cwd, dirPath, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
+  
 }
 // todo 循环遍历*.vue文件
-function getDirFilePath(dirPath) {
-  if (fs.statSync(dirPath).isDirectory()) {
-    fs.readdirSync(dirPath).forEach(dir => {
-      
-    })
-  } else if (dirPath.endWith('.vue')) {
-    return dirPath;
+function getDirFilePath(dir) {
+  let fileList = [];
+  function walk(dirPath) {
+    if (!fs.existsSync(dirPath)) throw new Error('dirPath does not exist');
+    if (fs.statSync(dirPath).isDirectory()) {
+      fs.readdirSync(dirPath).forEach((sonDir) => walk(`${dirPath}/${sonDir}`));
+    } else if (fs.statSync(dirPath).isFile() && dirPath.endsWith('.vue')) {
+      fileList.push(dirPath);
+    }
   }
+  walk(dir);
+  return(fileList);
 }
 
 /**
