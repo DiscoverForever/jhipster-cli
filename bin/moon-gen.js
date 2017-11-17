@@ -9,9 +9,11 @@ const cwd = process.cwd();
 program
   .usage('<config-path>')
   .option('-c, --configpath <string>', 'ui config file path')
+  .option('-r, --componentpath <string>', 'component dir path')
   .parse(process.argv)
 
 const configPath = program.configpath;
+const componentPath = program.componentpath;
 
 /**
  * 生成vue component
@@ -25,6 +27,21 @@ function generateVueComponent(UIConfig, componentName) {
   const vueComponent = formTpl.generateForm(UIConfig.form);
   fs.writeFileSync(path.join(cwd, `${componentName}.g.vue`), vueComponent);
   logger.info(formTpl.generateForm(UIConfig.form));
+}
+
+function generateVueRouter(dirPath) {
+  let routes = [];
+
+  fs.readdirSync(path.join(cwd, dirPath), (fileName) => {
+    let route = {
+      path: `/${dirPath}/${fileName}`,
+      name: `${dirPath}/${fileName}`,
+      meta: {login:true, keepAlive:false},
+      component: `() => import('../../src/components/${fileName}')`
+    };
+    routes.push(route);
+  });
+  fs.writeFileSync(cwd, 'router.g.js', routes)
 }
 
 /**
@@ -44,3 +61,4 @@ function run(UIConfigPath) {
 }
 
 if (configPath) run(configPath);
+if (componentPath) generateVueRouter(componentPath);
