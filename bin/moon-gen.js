@@ -32,16 +32,26 @@ function generateVueComponent(UIConfig, componentName) {
 function generateVueRouter(dirPath) {
   let routes = [];
 
-  fs.readdirSync(path.join(cwd, dirPath), (fileName) => {
+  fs.readdirSync(path.join(cwd, dirPath)).forEach((dirName) => {
     let route = {
-      path: `/${dirPath}/${fileName}`,
-      name: `${dirPath}/${fileName}`,
-      meta: {login:true, keepAlive:false},
-      component: `() => import('../../src/components/${fileName}')`
+      path: `/${dirPath}/${dirName}`,
+      name: `${dirPath}/${dirName}`,
+      meta: { login: true, keepAlive: false },
+      component: `() => import('../../src/components/${dirName}')`
     };
     routes.push(route);
   });
-  fs.writeFileSync(cwd, 'router.g.js', routes)
+  fs.writeFileSync(path.join(cwd, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
+}
+// todo 循环遍历*.vue文件
+function getDirFilePath(dirPath) {
+  if (fs.statSync(dirPath).isDirectory()) {
+    fs.readdirSync(dirPath).forEach(dir => {
+      
+    })
+  } else if (dirPath.endWith('.vue')) {
+    return dirPath;
+  }
 }
 
 /**
@@ -52,7 +62,7 @@ function run(UIConfigPath) {
   if (UIConfigPath && fs.existsSync(path.join(cwd, UIConfigPath))) {
     if (fs.statSync(path.join(cwd, UIConfigPath)).isFile()) {
       const UIConfig = JSON.parse(fs.readFileSync(path.join(cwd, UIConfigPath)).toString());
-      const UIConfigFileName = UIConfigPath.replace(/(.*\/)*([^.]+).*/ig,"$2");
+      const UIConfigFileName = UIConfigPath.replace(/(.*\/)*([^.]+).*/ig, "$2");
       generateVueComponent(UIConfig, UIConfigFileName);
     } else {
       logger.warn('please provide a valide file');
