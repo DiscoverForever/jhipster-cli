@@ -48,7 +48,7 @@ async function generateVueRouter(dirPath) {
         login: true,
         keepAlive: false
       },
-      component: `() => import('../../src/components/${fileName}')`
+      component: `() => import('../components${filePath.split('components')[1]}')`
     };
   });
   let answers = await inquirer.prompt([{
