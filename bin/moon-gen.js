@@ -1,9 +1,11 @@
 #!/usr/bin/env node
+
 const program = require('commander');
 const fs = require('fs');
 const util = require('../lib/utils');
 const logger = require('../lib/logger');
 const path = require('path');
+const inquirer = require('inquirer');
 const cwd = process.cwd();
 
 program
@@ -29,39 +31,50 @@ function generateVueComponent(UIConfig, componentName) {
   logger.info(formTpl.generateForm(UIConfig.form));
 }
 
-function generateVueRouter(dirPath) {
-  // let routes = [];
-
-  // fs.readdirSync(path.join(cwd, dirPath)).forEach((dirName) => {
-  //   let route = 
-  //   routes.push(route);
-  // });
-  // todo 处理路径 ／user
+/**
+ * 生成路由
+ * @param dirPath
+ */
+async function generateVueRouter(dirPath) {
   let vueFileList = getDirFilePath(path.join(cwd, dirPath));
-  let routes = vueFileList.map(fileName => {
+  let routes = vueFileList.map(({
+    filePath,
+    fileName
+  }) => {
     return {
-      path: fileName,
-      name: fileName,
-      meta: { login: true, keepAlive: false },
+      path: filePath.split('components')[1],
+      name: filePath.split('components')[1].substr(1),
+      meta: {
+        login: true,
+        keepAlive: false
+      },
       component: `() => import('../../src/components/${fileName}')`
     };
   });
-  fs.writeFileSync(path.join(cwd, dirPath, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
-  
+  let answers = await inquirer.prompt([{
+    type: 'input',
+    message: 'Please enter your router directory',
+    name: 'routeDir'
+  }]);
+  answers.routeDir ? fs.writeFileSync(path.join(cwd, answers.routeDir, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`) :logger.error('Your input not vaild');
 }
 // todo 循环遍历*.vue文件
 function getDirFilePath(dir) {
   let fileList = [];
+
   function walk(dirPath) {
     if (!fs.existsSync(dirPath)) throw new Error('dirPath does not exist');
     if (fs.statSync(dirPath).isDirectory()) {
       fs.readdirSync(dirPath).forEach((sonDir) => walk(`${dirPath}/${sonDir}`));
     } else if (fs.statSync(dirPath).isFile() && dirPath.endsWith('.vue')) {
-      fileList.push(dirPath);
+      fileList.push({
+        filePath: dirPath,
+        fileName: dirPath.substr(dirPath.lastIndexOf('/') + 1)
+      });
     }
   }
   walk(dir);
-  return(fileList);
+  return (fileList);
 }
 
 /**
