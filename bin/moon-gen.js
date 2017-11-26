@@ -27,7 +27,7 @@ function generateVueComponent(UIConfig, componentName) {
   logger.info(UIConfig);
   const formTpl = require('../template/form');
   const vueComponent = formTpl.generateForm(UIConfig.form);
-  fs.writeFileSync(path.join(cwd, `${componentName}.g.vue`), vueComponent);
+  fs.writeFileSync(path.join(cwd, `${componentName}-detail.g.vue`), vueComponent);
   logger.info(formTpl.generateForm(UIConfig.form));
 }
 
