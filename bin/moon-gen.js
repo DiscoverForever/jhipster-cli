@@ -65,7 +65,7 @@ function getDirFilePath(dir) {
   function walk(dirPath) {
     if (!fs.existsSync(dirPath)) throw new Error('dirPath does not exist');
     if (fs.statSync(dirPath).isDirectory()) {
-      fs.readdirSync(dirPath).forEach((sonDir) => walk(`${dirPath}/${sonDir}`));
+      fs.readdirSync(dirPath).forEach((sonDir) => walk(path.join(dirPath, sonDir)));
     } else if (fs.statSync(dirPath).isFile() && dirPath.endsWith('.vue')) {
       fileList.push({
         filePath: dirPath,
