@@ -1,5 +1,13 @@
 # jhipster-cli
 A simple CLI for generate frontend and backend project from jdl file
+<div style="display:flex;">
+  <img src="https://cn.vuejs.org/images/logo.png" width = "100px" height = "100px" alt="图片名称" align=center />
+  <div style="font-size:50px;font-weight:700;padding-left:20px;padding-right:20px;">+</div>
+  <div style="font-size:15px;font-weight:700;    background-color:#468eff;color:#fff;width:100px;height:100px;line-height:100px;text-align:center;">LeanCloud</div>
+</div>
+
+
+
 ## 快速起步
 ```
 $ git clone https://github.com/DiscoverForever/jhipster-cli.git
