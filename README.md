@@ -11,6 +11,7 @@ A simple CLI for generate frontend and backend project from jdl file
 ## 快速起步
 ```
 $ git clone https://github.com/DiscoverForever/jhipster-cli.git
+$ cd jhipster-cli
 $ npm i -g moon
 $ moon init -p example.jdl
 ```
