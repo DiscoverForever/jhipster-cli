@@ -8,6 +8,7 @@ const program = require('commander');
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 const CWD = process.cwd();
+const inquirer = require('inquirer');
 
 program
   .usage('<path>')
@@ -49,11 +50,31 @@ function generateEntityComponent(uiMataName, uiMataPath) {
   child.stderr.pipe(process.stderr);
 
 }
-
+/**
+ * 获取用户自定义配置
+ */
+async function getUserCustomSetting() {
+  const BACKEND_CONFIG_OPTIONS = ['微信支付', '支付宝支付', '微信消息服务'];
+  const FRONTEND_CONFIG_OPTIONS = ['微信支付', '支付宝支付'];
+  const questions = [
+    {
+      type: 'input',
+      message: 'Please enter your leancloud username',
+      name: 'leancloudUsername'
+    },
+    {
+      type: 'input',
+      message: 'Please enter your leancloud password',
+      name: 'leancloudPassword'
+    }
+  ];
+  let answers = await inquirer.prompt(questions);
+}
 /**
  * 入口函数
  */
 async function main(jdlpath) {
+  await getUserCustomSetting();
   // download leanengine
   await utils.downloadGitRep('leancloud/node-js-getting-started', path.join(CWD, 'backend'));
   // download vux
