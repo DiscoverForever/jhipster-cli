@@ -1,4 +1,4 @@
-function getCloudHook(entity) {
+function getCloudFunction(entity) {
   let str = '';
   entity.body.forEach(prop => {
     if (prop.type === 'Service') str += `
@@ -8,7 +8,7 @@ function getCloudHook(entity) {
   });
   return str;
 }
-module.exports.generateHook = entity => {
+module.exports.generateHookFunction = entity => {
   return `
   const AV = require('leanengine');
   /** 保存前 */
@@ -23,6 +23,6 @@ module.exports.generateHook = entity => {
   AV.Cloud.beforeDelete('${entity.name}', function(request) {});
   /** 删除后 */
   AV.Cloud.afterDelete('${entity.name}', function(request) {});
-  ${getCloudHook(entity)}
+  ${getCloudFunction(entity)}
   `
 };
