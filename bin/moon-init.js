@@ -6,7 +6,6 @@ const logger = require('../lib/logger');
 const utils = require('../lib/utils');
 const program = require('commander');
 const spawn = require('child_process').spawn;
-const exec = require('child_process').exec;
 const CWD = process.cwd();
 const inquirer = require('inquirer');
 const {
@@ -105,6 +104,10 @@ async function main(jdlpath) {
     let jdl = utils.readJDLFile(path.join(CWD, jdlpath));
     generateEntities(jdl);
   }
+  // generate vue router
+  execSync('moon generate -r frontend/src/components', {
+    stdio: [1, 2, 3]
+  });
 
 }
 
