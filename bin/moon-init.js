@@ -9,6 +9,9 @@ const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 const CWD = process.cwd();
 const inquirer = require('inquirer');
+const {
+  execSync
+} = require('child_process');
 
 program
   .usage('<path>')
@@ -27,7 +30,7 @@ function generateEntities(jdl) {
   jdl.entities.forEach(entity => {
     logger.info(JSON.stringify(jdl))
     const entityTemplate = entityTpl.generateEntity(entity);
-    const hookTemplate = hookTpl.generateHook(entity);
+    const hookTemplate = hookTpl.generateHookFunction(entity);
     const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
@@ -44,11 +47,20 @@ function generateEntities(jdl) {
 
 function generateEntityComponent(uiMataName, uiMataPath) {
   logger.info(uiMataPath);
-  const child = spawn('moon', ['generate', '-c', uiMataName], { cwd : uiMataPath});
+  const child = spawn('moon', ['generate', '-c', uiMataName], {
+    cwd: uiMataPath
+  });
   process.stdin.pipe(child.stdin);
   child.stdout.pipe(process.stdout);
   child.stderr.pipe(process.stderr);
 
+}
+
+function generateBackend() {
+  execSync('lean login', {
+    stdio: [1, 2, 3]
+  });
+  execSync('lean init')
 }
 /**
  * 获取用户自定义配置
@@ -56,8 +68,7 @@ function generateEntityComponent(uiMataName, uiMataPath) {
 async function getUserCustomSetting() {
   const BACKEND_CONFIG_OPTIONS = ['微信支付', '支付宝支付', '微信消息服务'];
   const FRONTEND_CONFIG_OPTIONS = ['微信支付', '支付宝支付'];
-  const questions = [
-    {
+  const questions = [{
       type: 'input',
       message: 'Please enter your leancloud username',
       name: 'leancloudUsername'
@@ -74,9 +85,8 @@ async function getUserCustomSetting() {
  * 入口函数
  */
 async function main(jdlpath) {
-  await getUserCustomSetting();
   // download leanengine
-  await utils.downloadGitRep('leancloud/node-js-getting-started', path.join(CWD, 'backend'));
+  await utils.downloadGitRep('discoverforever/node-js-getting-started', path.join(CWD, 'backend'));
   // download vux
   await utils.downloadGitRep('discoverforever/vux-template', path.join(CWD, 'frontend'));
 
@@ -95,7 +105,7 @@ async function main(jdlpath) {
     let jdl = utils.readJDLFile(path.join(CWD, jdlpath));
     generateEntities(jdl);
   }
-  
+
 }
 
 if (program.jdlpath) main(program.jdlpath);
