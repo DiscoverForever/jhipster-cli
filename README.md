@@ -14,16 +14,22 @@ $ git clone https://github.com/DiscoverForever/jhipster-cli.git
 $ cd jhipster-cli
 $ npm i -g moon
 $ moon init -p example.jdl
+$ cd frontend
+$ npm install
+$ npm run dev
+$ cd ../backend
+$ npm install
+$ lean up
 ```
 ## 支持命令
 
-``` bash
+```
  Usage: moon <command> [options]
 
 
   Options:
 
-    -V, --version  output the version number
+    -V, --version  outpuvt the version number
     -h, --help     output usage information
 
 
