@@ -29,7 +29,7 @@ $ lean up
 
   Options:
 
-    -V, --version  outpuvt the version number
+    -V, --version  output the version number
     -h, --help     output usage information
 
 
