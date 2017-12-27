@@ -51,12 +51,14 @@ async function generateVueRouter(dirPath) {
       component: `() => import('../components${filePath.split('components')[1]}')`
     };
   });
-  let answers = await inquirer.prompt([{
-    type: 'input',
-    message: 'Please enter your router directory',
-    name: 'routeDir'
-  }]);
-  answers.routeDir ? fs.writeFileSync(path.join(cwd, answers.routeDir, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`) :logger.error('Your input not vaild');
+  // let answers = await inquirer.prompt([{
+  //   type: 'input',
+  //   message: 'Please enter your router directory',
+  //   name: 'routeDir'
+  // }]);
+  // answers.routeDir ? fs.writeFileSync(path.join(cwd, answers.routeDir, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`) :logger.error('Your input not vaild');
+  fs.writeFileSync(path.join(dirPath, '..', 'router', 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
+  logger.info('generated', path.join(dirPath, '..', 'router', 'router.g.js'));
 }
 // todo 循环遍历*.vue文件
 function getDirFilePath(dir) {
