@@ -26,16 +26,19 @@ function generateEntities(jdl) {
   const entityTpl = require('../template/entity');
   const hookTpl = require('../template/hook');
   const uiMataTpl = require('../template/ui.mata');
+  const tableTpl = require('../template/table');
   jdl.entities.forEach(entity => {
     logger.info(JSON.stringify(jdl))
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHookFunction(entity);
     const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
+    const tableTempalte = tableTpl.generateEntityTable(entity.name);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
     fs.mkdirSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`));
     fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
+    fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), tableTempalte);
     fs.writeFileSync(path.join(CWD, 'backend/entities/', `${entity.name}.g.ts`), entityTemplate);
     fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
     fs.writeFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
