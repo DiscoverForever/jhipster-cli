@@ -1,0 +1,41 @@
+/**
+ * 主任务
+ */
+entity Task {
+	/**标题*/
+	title String
+  /**描述*/
+	description String
+  /**状态*/
+  state State
+}
+
+/**
+ * 子任务
+ */
+entity Task {
+	/**标题*/
+	title String
+  /**描述*/
+	description String
+  /**状态*/
+  state State
+}
+
+enum State {
+  /**待办*/
+  BACKLOG,
+  /**进行中*/
+  IN_PROGRESS,
+  /**已完成*/
+  DONE,
+  /**已关闭*/
+  CLOSED
+}
+
+entity STATE_MATION {
+  /**创建任务*/
+  start BACKLOG=>IN_PROGRESS
+  /**关闭任务*/
+  close DONE=>CLOSED
+}

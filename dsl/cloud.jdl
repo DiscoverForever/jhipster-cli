@@ -1,0 +1,16 @@
+/**注册*/
+entity Register {
+  /**用户名*/
+  username String required
+  /**密码*/
+  password String required
+  /**手机号*/
+  phoneNumber String required
+}
+/**登录*/
+entity Login {
+  /**用户名*/
+  username String required
+  /**密码*/
+  password String required
+}

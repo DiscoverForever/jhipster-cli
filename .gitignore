@@ -68,9 +68,6 @@ typings/
 entities/
 hook/
 
-# jdl
-*.jdl
-
 # ide
 .idea
 .vscode
