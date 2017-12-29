@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const program = require('commander');
 const AV = require('leanengine');
-const fs = require('fs');
+const fs = require('fs-extra');
 const util = require('../lib/utils');
 const path = require('path');
 
@@ -26,7 +26,7 @@ function initLeanCloud() {
  */
 async function exportEntity(entityName, props) {
   // 新建导出文件
-  fs.writeFileSync(`${entityName}.md`, '');
+  fs.outputFileSync(`${entityName}.md`, '');
   // 生成实体表Header
   await generateMdTableHeader(entityName, props);
   await generateMdTableContent(entityName, props);

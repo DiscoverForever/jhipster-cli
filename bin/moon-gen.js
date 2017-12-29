@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-const fs = require('fs');
+const fs = require('fs-extra');
 const util = require('../lib/utils');
 const logger = require('../lib/logger');
 const path = require('path');
@@ -27,7 +27,7 @@ function generateVueComponent(UIConfig, componentName) {
   logger.info(UIConfig);
   const formTpl = require('../template/form');
   const vueComponent = formTpl.generateForm(UIConfig.form);
-  fs.writeFileSync(path.join(cwd, `${componentName}-detail.g.vue`), vueComponent);
+  fs.outputFileSync(path.join(cwd, `${componentName}-detail.g.vue`), vueComponent);
   logger.info(formTpl.generateForm(UIConfig.form));
 }
 
@@ -56,8 +56,8 @@ async function generateVueRouter(dirPath) {
   //   message: 'Please enter your router directory',
   //   name: 'routeDir'
   // }]);
-  // answers.routeDir ? fs.writeFileSync(path.join(cwd, answers.routeDir, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`) :logger.error('Your input not vaild');
-  fs.writeFileSync(path.join(dirPath, '..', 'router', 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
+  // answers.routeDir ? fs.outputFileSync(path.join(cwd, answers.routeDir, 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`) :logger.error('Your input not vaild');
+  fs.outputFileSync(path.join(dirPath, '..', 'router', 'router.g.js'), `export default ${JSON.stringify(routes).replace(/"\(/g, '(').replace(/\)"/g, ')')}`);
   logger.info('generated', path.join(dirPath, '..', 'router', 'router.g.js'));
 }
 // todo 循环遍历*.vue文件

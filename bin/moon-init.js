@@ -24,26 +24,23 @@ program
  * @param jdl 
  */
 function generateEntities(jdl) {
-  const entityTpl = require('../template/entity');
-  const hookTpl = require('../template/hook');
   const uiMataTpl = require('../template/ui.mata');
-  const tableTpl = require('../template/table');
   jdl.entities.forEach(entity => {
     logger.info(JSON.stringify(jdl))
-    const entityTemplate = entityTpl.generateEntity(entity);
-    const hookTemplate = hookTpl.generateHookFunction(entity);
     const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
-    fs.mkdirSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`));
-    fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), entityTemplate);
-    fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
+    fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
     ejs.renderFile(path.join(__dirname, '..', 'template/table.vue'), {entity}, (err, str) => {
-      fs.writeFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), str);
+      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), str);
     });
-    fs.writeFileSync(path.join(CWD, 'backend/entities/', `${entity.name}.g.ts`), entityTemplate);
-    fs.writeFileSync(path.join(CWD, 'backend/hook/', `${entity.name}.hook.g.js`), hookTemplate);
-    fs.writeFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
+    ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
+      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
+    });
+    ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entity}, (err, str) => {
+      fs.outputFileSync(path.join(CWD, `backend/hook`, `${entity.name}.hook.g.js`), str);
+    });
+    fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
 
     generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
   });
@@ -94,10 +91,6 @@ async function main(jdlpath) {
   // download vux
   await utils.downloadGitRep('discoverforever/vux-template', path.join(CWD, 'frontend'));
 
-  if (!fs.existsSync(path.join(CWD, 'frontend/src/components/entities'))) fs.mkdirSync(path.join(CWD, 'frontend/src/components/entities'));
-  if (!fs.existsSync(path.join(CWD, 'backend/entities'))) fs.mkdirSync(path.join(CWD, 'backend/entities'));
-  if (!fs.existsSync(path.join(CWD, 'backend/hook'))) fs.mkdirSync(path.join(CWD, 'backend/hook'));
-  if (!fs.existsSync(path.join(CWD, 'uimata'))) fs.mkdirSync(path.join(CWD, 'uimata'));
   if (fs.statSync(jdlpath).isDirectory()) {
     let dirs = utils.readJDLDir(path.join(CWD, jdlpath));
     dirs.map(fileName => {
