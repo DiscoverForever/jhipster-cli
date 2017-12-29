@@ -1,6 +1,4 @@
-/**
- * 主任务
- */
+/**主任务*/
 entity Task {
 	/**标题*/
 	title String
@@ -10,9 +8,7 @@ entity Task {
   state State
 }
 
-/**
- * 子任务
- */
+/**子任务*/
 entity Task {
 	/**标题*/
 	title String
