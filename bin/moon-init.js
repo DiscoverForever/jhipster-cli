@@ -38,7 +38,7 @@ function generateEntities(jdl) {
       fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
     });
     ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entity}, (err, str) => {
-      fs.outputFileSync(path.join(CWD, `backend/hook`, `${entity.name}.hook.g.js`), str);
+      fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.hook.g.js`), str);
     });
     fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
 
