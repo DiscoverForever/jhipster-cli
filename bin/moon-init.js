@@ -32,7 +32,7 @@ function generateEntities(jdl) {
     const entityTemplate = entityTpl.generateEntity(entity);
     const hookTemplate = hookTpl.generateHookFunction(entity);
     const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
-    const tableTempalte = tableTpl.generateEntityTable(entity.name);
+    const tableTempalte = tableTpl.generateEntityTable(entity);
     logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
     logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
     fs.mkdirSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`));

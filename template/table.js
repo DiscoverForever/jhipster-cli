@@ -1,4 +1,11 @@
-module.exports.generateEntityTable = (entityName) => {
+function getTableHeader(props) {
+  let str = '';
+  props.forEach(prop => {
+    str += `<el-table-column width="120" prop="${prop.name}" label="${prop.javadoc}"></el-table-column>`
+  });
+  return str;
+}
+module.exports.generateEntityTable = (entity) => {
   return `<template>
   <div>
     <el-button-group>
@@ -9,9 +16,9 @@ module.exports.generateEntityTable = (entityName) => {
       <el-button type="primary" size="medium" :plain="true">刷新</el-button>
       <el-button type="primary" size="medium" :plain="true">其他</el-button>
     </el-button-group>
-    <el-table ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="550" tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+    <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="550" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
+      ${getTableHeader(entity.body)}
     </el-table>
     <div class="block">
       <el-pagination background layout="prev, pager, next" :total="20">
@@ -33,7 +40,7 @@ export default {
     entityName: {
       type: String,
       required: true,
-      default: '${entityName}'
+      default: '${entity.name}'
     }
   },
   created() {
@@ -41,8 +48,8 @@ export default {
   },
   methods: {
     async queryEntityData() {
-      const ${entityName}Query = new AV.Query('${entityName}');
-      const tableDataList = await ${entityName}Query.find();
+      const ${entity.name}Query = new AV.Query('${entity.name}');
+      const tableDataList = await ${entity.name}Query.find();
       this.tableData = tableDataList.filter(item => item.toJSON());
     }
   }
@@ -54,6 +61,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.table-wrapper {
+  padding: 20px;
+  box-sizing: border-box;
+}
+.el-button-group {
+  padding: 10px 20px;
 }
 </style>`;
 }
