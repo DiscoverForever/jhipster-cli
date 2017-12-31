@@ -9,7 +9,7 @@ entity Task {
 }
 
 /**子任务*/
-entity Task {
+entity SubTask {
 	/**标题*/
 	title String
   /**描述*/
