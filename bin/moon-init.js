@@ -26,23 +26,26 @@ program
 function generateEntities(jdl) {
   const uiMataTpl = require('../template/ui.mata');
   jdl.entities.forEach(entity => {
-    logger.info(JSON.stringify(jdl))
-    const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
-    logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
-    logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
-    fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
-    ejs.renderFile(path.join(__dirname, '..', 'template/table.vue'), {entity}, (err, str) => {
-      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), str);
-    });
-    ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
-      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
-    });
-    ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entity}, (err, str) => {
-      fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.hook.g.js`), str);
-    });
-    fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
+    if (entity.name !== 'STATE_MATION') {
+      logger.info(JSON.stringify(jdl))
+      const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
+      logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
+      logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
+      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
+      ejs.renderFile(path.join(__dirname, '..', 'template/table.vue'), {entity}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), str);
+      });
+      ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
+      });
+      ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State')}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.hook.g.js`), str);
+      });
+      fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
 
-    generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
+      generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
+    }
+    
   });
 }
 
