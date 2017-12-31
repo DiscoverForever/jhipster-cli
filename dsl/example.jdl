@@ -31,7 +31,7 @@ enum State {
 
 entity STATE_MATION {
   /**创建任务*/
-  start BACKLOG=>IN_PROGRESS
+  start BACKLOG->IN_PROGRESS
   /**关闭任务*/
-  close DONE=>CLOSED
+  close DONE->CLOSED
 }
