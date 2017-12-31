@@ -1,15 +1,5 @@
-/**主任务*/
+/**主任务#ACL={*{}}*/
 entity Task {
-	/**标题*/
-	title String
-  /**描述*/
-	description String
-  /**状态*/
-  state State
-}
-
-/**子任务*/
-entity SubTask {
 	/**标题*/
 	title String
   /**描述*/
