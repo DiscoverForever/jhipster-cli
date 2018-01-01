@@ -42,6 +42,12 @@ function generateEntities(jdl) {
       ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State'), ACL: querystring.parse(entity.javadoc.split('?')[1]).ACL}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.hook.g.js`), str);
       });
+      ejs.renderFile(path.join(__dirname, '..', 'template/hook.g.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State'), ACL: querystring.parse(entity.javadoc.split('?')[1]).ACL}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.g.js`), str);
+      });
+      ejs.renderFile(path.join(__dirname, '..', 'template/hook.ex.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State'), ACL: querystring.parse(entity.javadoc.split('?')[1]).ACL}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.ex.js`), str);
+      });
       fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
 
       generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
