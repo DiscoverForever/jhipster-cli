@@ -1,4 +1,4 @@
-/**主任务#ACL={*{}}*/
+/**主任务?ACL={'*':{read:true,write:true},'role:admin':{read:true,write:true}}*/
 entity Task {
 	/**标题*/
 	title String
@@ -19,6 +19,7 @@ enum State {
   CLOSED
 }
 
+/**状态机*/
 entity STATE_MATION {
   /**创建任务*/
   start BACKLOG->IN_PROGRESS
