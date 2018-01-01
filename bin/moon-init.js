@@ -9,6 +9,7 @@ const spawn = require('child_process').spawn;
 const CWD = process.cwd();
 const inquirer = require('inquirer');
 const ejs = require('ejs');
+const querystring = require('querystring');
 const {
   execSync
 } = require('child_process');
@@ -38,7 +39,7 @@ function generateEntities(jdl) {
       ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
       });
-      ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State')}, (err, str) => {
+      ejs.renderFile(path.join(__dirname, '..', 'template/hook.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State'), ACL: querystring.parse(entity.javadoc.split('?')[1]).ACL}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.hook.g.js`), str);
       });
       fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
