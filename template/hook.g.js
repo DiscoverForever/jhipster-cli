@@ -37,6 +37,40 @@ async function <%=prop.name%>({params, currentUser, sessionToken, meta}) {
   return entity.save(null, {sessionToken});
 }
 <%})%>
+
+function setACL(acl, currentUser) {
+  let entity = request.object;
+  let acl = new AV.ACL();
+  const ACL = <%-JSON.stringify(ACL).replace(/^"(.*)"$/g, '$1')%>;
+  for (var key in ACL) {
+    if (key === '*') {
+      acl.setPublicReadAccess(ACL[key][read]);
+      acl.setPublicWriteAccess(ACL[key][write]);
+    }
+    if (key.startsWith('role')) {
+      const roleName = key.split(':')[1];
+      const roleQuery = new AV.Query(AV.Role);
+      roleQuery.equalTo('name', roleName);
+      const role = roleQuery.first();
+      acl.setRoleReadAccess(role, ACL[key][read])
+      acl.setRoleWriteAccess(role, ACL[key][write]);
+    }
+    acl.setReadAccess(currentUser, true);
+    acl.setWriteAccess(currentUser, true);
+  }
+  entity.setACL(acl);
+}
+
+function createRole(roleName, roleAcl) {
+  roleAcl ? roleAcl : roleAcl = new AV.ACL();
+  roleAcl.setPublicReadAccess(false);
+  roleAcl.setPublicWriteAccess(false);
+  // roleAcl.setWriteAccess(admin, true);
+
+  const role = new AV.Role(roleName, acl);
+  return role.save();
+}
+
 module.exports = {
   <%=entities[0].name%>_beforeSave,
   <%=entities[0].name%>_afterSave,
