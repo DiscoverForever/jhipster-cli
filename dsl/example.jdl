@@ -20,7 +20,7 @@ enum State {
 }
 
 /**状态机*/
-entity STATE_MATION {
+STATEMACHINE State {
   /**创建任务*/
   start BACKLOG->IN_PROGRESS
   /**关闭任务*/
