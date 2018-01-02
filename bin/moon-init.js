@@ -25,14 +25,14 @@ program
  * @param jdl 
  */
 function generateEntities(jdl) {
-  const uiMataTpl = require('../template/ui.mata');
+  const uiMetaTpl = require('../template/ui.meta');
   jdl.entities.forEach(entity => {
-    if (entity.name !== 'STATE_MATION') {
+    if (entity.name.startsWith('STATEMATION')) {
       logger.info(JSON.stringify(jdl))
-      const uiMataTemplate = uiMataTpl.generateUiMata(entity, jdl.enums);
+      const uiMetaTemplate = uiMetaTpl.generateUiMeta(entity, jdl.enums);
       logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
       logger.info('generate file', path.join(CWD, 'backend/hook', `${entity.name}.hook.g.js`));
-      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.mata.json`), uiMataTemplate);
+      fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.ui.meta.json`), uiMetaTemplate);
       ejs.renderFile(path.join(__dirname, '..', 'template/table.vue'), {entity}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.vue`), str);
       });
@@ -48,18 +48,18 @@ function generateEntities(jdl) {
       ejs.renderFile(path.join(__dirname, '..', 'template/hook.ex.js'), {entities: jdl.entities, state: jdl.enums.find(item => item.name==='State'), ACL: querystring.parse(entity.javadoc.split('?')[1]).ACL}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `backend/hook/${entity.name}`, `${entity.name}.ex.js`), str);
       });
-      fs.outputFileSync(path.join(CWD, 'uimata/', `${entity.name}.ui.mata.json`), uiMataTemplate);
+      fs.outputFileSync(path.join(CWD, 'uimeta/', `${entity.name}.ui.meta.json`), uiMetaTemplate);
 
-      generateEntityComponent(`${entity.name}.ui.mata.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
+      generateEntityComponent(`${entity.name}.ui.meta.json`, path.join(CWD, `frontend/src/components/entities/${entity.name}`));
     }
     
   });
 }
 
-function generateEntityComponent(uiMataName, uiMataPath) {
-  logger.info(uiMataPath);
-  const child = spawn('moon', ['generate', '-c', uiMataName], {
-    cwd: uiMataPath
+function generateEntityComponent(uiMetaName, uiMetaPath) {
+  logger.info(uiMetaPath);
+  const child = spawn('moon', ['generate', '-c', uiMetaName], {
+    cwd: uiMetaPath
   });
   process.stdin.pipe(child.stdin);
   child.stdout.pipe(process.stdout);
