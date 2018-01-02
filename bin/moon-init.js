@@ -27,7 +27,7 @@ program
 function generateEntities(jdl) {
   const uiMetaTpl = require('../template/ui.meta');
   jdl.entities.forEach(entity => {
-    if (entity.name.startsWith('STATEMATION')) {
+    if (!entity.name.startsWith('STATEMACHINE')) {
       logger.info(JSON.stringify(jdl))
       const uiMetaTemplate = uiMetaTpl.generateUiMeta(entity, jdl.enums);
       logger.info('generate file', path.join(CWD, 'backend/entities', `${entity.name}.g.ts`));
