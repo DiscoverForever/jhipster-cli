@@ -56,9 +56,9 @@ AV.Cloud.define('<%=prop.name%>', async ({params, currentUser, sessionToken, met
   if (!objectId) throw new Error('objectId must not null');
   const entity = AV.Object.createWithoutData('<%=entities[0].name%>', objectId);
   await entity.fetch();
-  let currentState = entity.get('state');
+  let currentState = entity.get('<%=entities[1].name.split('STATEMACHINE_')[1]%>');
   if (currentState !== <%=state.values.indexOf(prop.type.split('__')[0])%>) throw new Error('currentState must be <%=state.values.indexOf(prop.type.split('__')[0])%>,but get ${currentState}');
-  entity.set('state', <%=state.values.indexOf(prop.type.split('__')[1])%>);
+  entity.set('<%=entities[1].name.split('STATEMACHINE_')[1]%>', <%=state.values.indexOf(prop.type.split('__')[1])%>);
   return entity.save(null, {sessionToken});
 });
 <%})%>
