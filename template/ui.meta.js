@@ -54,7 +54,7 @@ function getAddress(prop, index) {
   };
 }
 
-module.exports.generateUiMata = function (entity, enums) {
+module.exports.generateUiMeta = function (entity, enums) {
   let obj = { form: [] };
   let enumNames = enums.map(enu => enu.name);
   entity.body.forEach((prop, index) => {
