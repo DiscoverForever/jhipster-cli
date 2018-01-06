@@ -36,7 +36,7 @@ export default {
     entityName: {
       type: String,
       required: true,
-      default: '${entity.name}'
+      default: '<%=entity.name%>'
     }
   },
   created() {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     async queryEntityData() {
-      const <%=entity.name%>Query = new AV.Query('${entity.name}');
+      const <%=entity.name%>Query = new AV.Query('<%=entity.name%>');
       const tableDataList = await <%=entity.name%>Query.find();
       this.tableData = tableDataList.filter(item => item.toJSON());
     }
