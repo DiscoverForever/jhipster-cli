@@ -46,7 +46,7 @@ export default {
     async queryEntityData() {
       const <%=entity.name%>Query = new AV.Query('<%=entity.name%>');
       const tableDataList = await <%=entity.name%>Query.find();
-      this.tableData = tableDataList.filter(item => item.toJSON());
+      this.tableData = tableDataList.map(item => item.toJSON());
     }
   }
 }
