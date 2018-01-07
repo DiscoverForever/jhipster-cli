@@ -11,13 +11,24 @@
     <div class="table-wrapper">
     <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="550" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
       <% entity.body.forEach(prop => { %>
       <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>"></el-table-column>
       <% })%>
+      <el-table-column width="200" prop="createdAt" label="创建时间" @formatter="formatterDate"></el-table-column>
+      <el-table-column width="200" prop="updatedAt" label="更新时间" @formatter="formatterDate"></el-table-column>
     </el-table>  
     </div>
     <div class="block">
-      <el-pagination background layout="prev, pager, next" :total="20">
+      <el-pagination
+      background
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageNumber"
+      :page-sizes="[20, 50, 100, 200, 300, 400]"
+      :page-size="20"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="400">
       </el-pagination>
     </div>
   </div>
@@ -30,6 +41,8 @@ export default {
   data() {
     return {
       tableData: [],
+      pageNumber: 0,
+      pageSize: 20
     }
   },
   props: {
@@ -43,10 +56,27 @@ export default {
     this.queryEntityData();
   },
   methods: {
-    async queryEntityData() {
+    async queryEntityData(skip = 0, limit = 20) {
       const <%=entity.name%>Query = new AV.Query('<%=entity.name%>');
+      <%=entity.name%>Query.skip(skip);
+      <%=entity.name%>Query.limit(limit);
       const tableDataList = await <%=entity.name%>Query.find();
       this.tableData = tableDataList.map(item => item.toJSON());
+    },
+    formatterDate(row, column, cellValue) {
+      return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n');
+    },
+    handleSizeChange(pageSize) {
+      this.queryEntityData( this.pageNumber * pageSize, pageSize)
+    },
+    
+  },
+  watch: {
+    'pageSize'() {
+      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize)
+    },
+    'pageNumber'() {
+      this.queryEntityData((this.pageNumber  - 1) * this.pageSize, this.pageSize)
     }
   }
 }
