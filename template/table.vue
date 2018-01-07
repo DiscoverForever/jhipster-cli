@@ -42,7 +42,8 @@ export default {
     return {
       tableData: [],
       pageNumber: 0,
-      pageSize: 20
+      pageSize: 20,
+      total: 0
     }
   },
   props: {
@@ -62,14 +63,20 @@ export default {
       <%=entity.name%>Query.limit(limit);
       const tableDataList = await <%=entity.name%>Query.find();
       this.tableData = tableDataList.map(item => item.toJSON());
+      this.total = await (new AV.Query('<%=entity.name%>').count());
     },
-    formatterDate(row, column, cellValue) {
-      return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n');
+    handleSelectionChange() {
+      
+    },
+    handleCurrentChange(pageNumber) {
+      this.pageNumber = pageNumber;
     },
     handleSizeChange(pageSize) {
-      this.queryEntityData( this.pageNumber * pageSize, pageSize)
+      this.pageSize = pageSize;
     },
-    
+    formatterDate(row, column, cellValue) {
+      return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n')
+    }
   },
   watch: {
     'pageSize'() {
