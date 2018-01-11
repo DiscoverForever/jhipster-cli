@@ -76,6 +76,12 @@ export default {
     },
     formatterDate(row, column, cellValue) {
       return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n')
+    },
+    create() {
+      
+    },
+    delete() {
+
     }
   },
   watch: {
