@@ -1,7 +1,7 @@
 const AV = require('leanengine');
 /** 保存前 */
 async function <%=entities[0].name%>_beforeSave(request) {
-  let entity = request.Object;
+  let entity = request.object;
   entity.set('createdBy', request.user);
   entity.set('state', 0);
 }
@@ -10,7 +10,8 @@ async function <%=entities[0].name%>_afterSave(request) {
 }
 /** 更新前 */
 async function <%=entities[0].name%>_beforeUpdate(request) {
-  let entity = request.Object;
+  if (!request.user) throw new Error('您还未登录');
+  let entity = request.object;
   entity.set('updatedby', request.user);
 }
 /** 更新后 */
