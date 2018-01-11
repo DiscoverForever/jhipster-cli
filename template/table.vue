@@ -28,7 +28,7 @@
       :page-sizes="[20, 50, 100, 200, 300, 400]"
       :page-size="20"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
+      :total="total">
       </el-pagination>
     </div>
   </div>
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       tableData: [],
-      pageNumber: 0,
+      pageNumber: 1,
       pageSize: 20,
       total: 0
     }
