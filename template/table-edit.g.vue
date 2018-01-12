@@ -4,7 +4,28 @@
       
       <%entity.body.forEach(prop => {%>
       <el-form-item label="<%=prop.javadoc%>">
-        <el-input v-model="formData.<%=prop.name%>"></el-input>
+        <%if (prop.type === 'String') {%>
+        <el-input v-model.number="formData.<%=prop.name%>"></el-input>
+        <%}%>
+        <%if (prop.type === 'Date') {%>
+        <el-date-picker v-model="formData.<%=prop.name%>" type="date" placeholder="选择日期"></el-date-picker>
+        <%}%>
+        <%if (prop.type === 'Integer' || prop.type === 'Long' || prop.type === 'BigDecimal' || prop.type === 'Float' || prop.type === 'Double') {%>
+        <el-input v-model.number="formData.<%=prop.name%>"></el-input>
+        <%}%>
+        <%if (prop.type === 'Boolean') {%>
+        <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
+          <el-option label="是" value="true"></el-option>
+          <el-option label="否" value="false"></el-option>
+        </el-select>
+        <%}%>
+        <%if (enums.find(enumItem => enumItem.name === prop.type)) {%>
+        <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
+          <%enums.find(enumItem => enumItem.name === prop.type).values.forEach(enumVal => {%>
+          <el-option label="<%=enumVal%>" value="<%=enumVal%>"></el-option>
+          <%})%>
+        </el-select>
+        <%}%>
       </el-form-item>
       <%})%>
       <el-form-item>

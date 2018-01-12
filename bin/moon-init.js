@@ -39,7 +39,7 @@ function generateEntities(jdl) {
       ejs.renderFile(path.join(__dirname, '..', 'template/table-add.g.vue'), {entity}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}-add.g.vue`), str);
       });
-      ejs.renderFile(path.join(__dirname, '..', 'template/table-edit.g.vue'), {entity}, (err, str) => {
+      ejs.renderFile(path.join(__dirname, '..', 'template/table-edit.g.vue'), {entity, enums: jdl.enums}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}-edit.g.vue`), str);
       });
       ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
