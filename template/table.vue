@@ -15,8 +15,8 @@
       <% entity.body.forEach(prop => { %>
       <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>"></el-table-column>
       <% })%>
-      <el-table-column width="200" prop="createdAt" label="创建时间" @formatter="formatterDate"></el-table-column>
-      <el-table-column width="200" prop="updatedAt" label="更新时间" @formatter="formatterDate"></el-table-column>
+      <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate"></el-table-column>
+      <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate"></el-table-column>
     </el-table>  
     </div>
     <div class="block">
