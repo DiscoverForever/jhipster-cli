@@ -1,5 +1,5 @@
 <template>
-  <div class="<%=entity.name%>-add">
+  <div class="<%=entity.name%>-edit">
     <el-form ref="form" :model="formData" label-width="80px">
       
       <%entity.body.forEach(prop => {%>
@@ -29,7 +29,7 @@
       </el-form-item>
       <%})%>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button type="primary" @click="onSubmit">保存修改</el-button>
         <el-button @click="onCancle">取消</el-button>
       </el-form-item>
     </el-form>
@@ -39,7 +39,7 @@
 <script>
 import AV from 'leancloud-storage';
 export default {
-  name: 'Task-add',
+  name: '<%=entity.name%>-edit',
   data() {
     return {
       formData: {
@@ -49,7 +49,21 @@ export default {
       }
     }
   },
+  props: {
+    objectId: {
+      type: String,
+      require: true
+    }
+  },
+  created() {
+    this.init()
+  },
   methods: {
+    async init() {
+      const <%=entity.name.toLowerCase()%>Query = new AV.Query('<%=entity.name%>')
+      const formData = await <%=entity.name.toLowerCase()%>Query.get(this.objectId)
+      this.formData = formData.toJSON()
+    },
     onSubmit() {
       const <%=entity.name.toLowerCase()%> = new AV.Object('<%=entity.name%>')
       <%entity.body.forEach(prop => {%>
