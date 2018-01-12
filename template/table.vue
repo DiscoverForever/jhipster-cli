@@ -12,11 +12,17 @@
     <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="550" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
-      <% entity.body.forEach(prop => { %>
+      <%_ entity.body.forEach(prop => { _%>
       <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>"></el-table-column>
-      <% })%>
+      <%_ })_%>
       <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate"></el-table-column>
       <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate"></el-table-column>
+      <el-table-column fixed="right" label="操作" width="100">
+        <template slot-scope="scope">
+          <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">查看</el-button>
+          <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-edit.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">编辑</el-button>
+        </template>
+      </el-table-column>
     </el-table>  
     </div>
     <div class="block">
@@ -44,13 +50,6 @@ export default {
       pageNumber: 1,
       pageSize: 20,
       total: 0
-    }
-  },
-  props: {
-    entityName: {
-      type: String,
-      required: true,
-      default: '<%=entity.name%>'
     }
   },
   created() {
