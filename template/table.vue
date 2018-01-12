@@ -9,7 +9,7 @@
       <el-button type="primary" size="medium" :plain="true">其他</el-button>
     </el-button-group>
     <div class="table-wrapper">
-    <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="550" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
+    <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="650" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
       <%_ entity.body.forEach(prop => { _%>
