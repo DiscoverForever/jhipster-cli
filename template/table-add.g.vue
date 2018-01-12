@@ -1,33 +1,32 @@
 <template>
   <div class="<%=entity.name%>-add">
     <el-form ref="form" :model="formData" label-width="80px">
-      
-      <%entity.body.forEach(prop => {%>
+      <%_entity.body.forEach(prop => {_%>
       <el-form-item label="<%=prop.javadoc%>">
-        <%if (prop.type === 'String') {%>
+        <%_if (prop.type === 'String') {_%>
         <el-input v-model.number="formData.<%=prop.name%>" clearable></el-input>
-        <%}%>
-        <%if (prop.type === 'Date') {%>
+        <%_}_%>
+        <%_if (prop.type === 'Date') {_%>
         <el-date-picker v-model="formData.<%=prop.name%>" type="datetime" placeholder="选择日期"></el-date-picker>
-        <%}%>
+        <%_}_%>
         <%if (prop.type === 'Integer' || prop.type === 'Long' || prop.type === 'BigDecimal' || prop.type === 'Float' || prop.type === 'Double') {%>
         <el-input v-model.number="formData.<%=prop.name%>" clearable></el-input>
-        <%}%>
-        <%if (prop.type === 'Boolean') {%>
+        <%_}_%>
+        <%_if (prop.type === 'Boolean') {_%>
         <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
           <el-option label="是" value="true"></el-option>
           <el-option label="否" value="false"></el-option>
         </el-select>
-        <%}%>
-        <%if (enums.find(enumItem => enumItem.name === prop.type)) {%>
+        <%_}_%>
+        <%_if (enums.find(enumItem => enumItem.name === prop.type)) {_%>
         <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
-          <%enums.find(enumItem => enumItem.name === prop.type).values.forEach(enumVal => {%>
+          <%_enums.find(enumItem => enumItem.name === prop.type).values.forEach(enumVal => {_%>
           <el-option label="<%=enumVal%>" value="<%=enumVal%>"></el-option>
-          <%})%>
+          <%_})_%>
         </el-select>
-        <%}%>
+        <%_}_%>
       </el-form-item>
-      <%})%>
+      <%_})_%>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
         <el-button @click="onCancle">取消</el-button>
@@ -43,18 +42,18 @@ export default {
   data() {
     return {
       formData: {
-        <%entity.body.forEach(prop => {%>
+        <%_entity.body.forEach(prop => {_%>
         <%=prop.name%>: '',
-        <%})%>
+        <%_})_%>
       }
     }
   },
   methods: {
     onSubmit() {
       const <%=entity.name.toLowerCase()%> = new AV.Object('<%=entity.name%>')
-      <%entity.body.forEach(prop => {%>
+      <%_entity.body.forEach(prop => {_%>
       <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', this.formData.<%=prop.name%>)
-      <%})%>
+      <%_})_%>
       return <%=entity.name.toLowerCase()%>.save();
     },
     onCancle() {
