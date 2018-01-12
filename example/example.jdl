@@ -6,6 +6,10 @@ entity Task {
 	description String
   /**状态*/
   state State
+  /**开始日期*/
+  startDate Date
+  /**是否开始*/
+  isStart Boolean
 }
 
 enum State {
