@@ -5,13 +5,13 @@
       <%entity.body.forEach(prop => {%>
       <el-form-item label="<%=prop.javadoc%>">
         <%if (prop.type === 'String') {%>
-        <el-input v-model.number="formData.<%=prop.name%>"></el-input>
+        <el-input v-model.number="formData.<%=prop.name%>" clearable></el-input>
         <%}%>
         <%if (prop.type === 'Date') {%>
-        <el-date-picker v-model="formData.<%=prop.name%>" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="formData.<%=prop.name%>" type="datetime" placeholder="选择日期"></el-date-picker>
         <%}%>
         <%if (prop.type === 'Integer' || prop.type === 'Long' || prop.type === 'BigDecimal' || prop.type === 'Float' || prop.type === 'Double') {%>
-        <el-input v-model.number="formData.<%=prop.name%>"></el-input>
+        <el-input v-model.number="formData.<%=prop.name%>" clearable></el-input>
         <%}%>
         <%if (prop.type === 'Boolean') {%>
         <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
