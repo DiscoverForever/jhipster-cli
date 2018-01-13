@@ -20,8 +20,8 @@
         <%_}_%>
         <%_if (enums.find(enumItem => enumItem.name === prop.type)) {_%>
         <el-select v-model="formData.<%=prop.name%>" placeholder="请选择活动区域">
-          <%_enums.find(enumItem => enumItem.name === prop.type).values.forEach(enumVal => {_%>
-          <el-option label="<%=enumVal%>" value="<%=enumVal%>"></el-option>
+          <%_enums.find(enumItem => enumItem.name === prop.type).values.forEach((enumVal, index) => {_%>
+          <el-option label="<%=enumVal%>" value="<%=index%>"></el-option>
           <%_})_%>
         </el-select>
         <%_}_%>
@@ -49,12 +49,17 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      const <%=entity.name.toLowerCase()%> = new AV.Object('<%=entity.name%>')
-      <%_entity.body.forEach(prop => {_%>
-      <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', this.formData.<%=prop.name%>)
-      <%_})_%>
-      return <%=entity.name.toLowerCase()%>.save();
+    async onSubmit() {
+      try {
+        const <%=entity.name.toLowerCase()%> = new AV.Object('<%=entity.name%>')
+        <%_entity.body.forEach(prop => {_%>
+        <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', this.formData.<%=prop.name%>)
+        <%_})_%>
+        await <%=entity.name.toLowerCase()%>.save();
+        this.$message.success('创建成功');
+      } catch (error) {
+        this.$message.error(`创建失败,${error.code}:${error.message}`);
+      }
     },
     onCancle() {
       this.$router.go(-1);
