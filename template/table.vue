@@ -13,8 +13,8 @@
       <%_ entity.body.forEach(prop => { _%>
       <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>"></el-table-column>
       <%_ })_%>
-      <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate"></el-table-column>
-      <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate"></el-table-column>
+      <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate" sortable></el-table-column>
+      <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">查看</el-button>
