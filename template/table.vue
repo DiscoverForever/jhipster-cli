@@ -17,7 +17,7 @@
       <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable="custom"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">查看</el-button>
+          <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-edit.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">查看</el-button>
           <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-edit.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
@@ -112,7 +112,8 @@ export default {
     async handleDelete() {
       await this.$confirm('确认删除？')
       const promiseList = this.selectedRows.map(selectedRow => AV.Object.createWithoutData('Task', selectedRow.objectId));
-      AV.Object.destroyAll(promiseList);
+      await AV.Object.destroyAll(promiseList);
+      await this.handleRefresh();
     },
     handleSearch() {
       this.searchDialogVisiable = true;
