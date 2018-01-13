@@ -1,12 +1,10 @@
 <template>
   <div>
     <el-button-group>
-      <el-button type="primary" size="medium" :plain="true">添加行</el-button>
-      <el-button type="primary" size="medium" :plain="true">删除行</el-button>
-      <el-button type="primary" size="medium" :plain="true">添加列</el-button>
-      <el-button type="primary" size="medium" :plain="true">查询</el-button>
-      <el-button type="primary" size="medium" :plain="true">刷新</el-button>
-      <el-button type="primary" size="medium" :plain="true">其他</el-button>
+      <el-button type="primary" size="medium" :plain="false" icon="el-icon-circle-plus-outline" @click="handleCreate">创建</el-button>
+      <el-button type="primary" size="medium" :plain="false" icon="el-icon-delete" @click="handleDelete">删除</el-button>
+      <el-button type="primary" size="medium" :plain="false" icon="el-icon-search" @click="handleSearch">查询</el-button>
+      <el-button type="primary" size="medium" :plain="false" icon="el-icon-refresh" @click="handleRefresh">刷新</el-button>
     </el-button-group>
     <div class="table-wrapper">
     <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="650" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
@@ -37,6 +35,28 @@
       :total="total">
       </el-pagination>
     </div>
+    <el-dialog title="查询条件" :visible.sync="searchDialogVisiable">
+      <el-form :model="form">
+        <el-form-item>
+          <el-select v-model="value5" multiple placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+          <el-select v-model="value5" multiple placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+          <el-input placeholder="请输入内容" v-model="input23">
+            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="info" @click="searchDialogVisiable = false">添加条件</el-button>
+        <el-button @click="searchDialogVisiable = false">取 消</el-button>
+        <el-button type="primary" @click="searchDialogVisiable = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -49,7 +69,13 @@ export default {
       tableData: [],
       pageNumber: 1,
       pageSize: 20,
-      total: 0
+      total: 0,
+      selectedRows: [],
+      searchDialogVisiable: false,
+      form: {
+        name: 1
+      },
+      options: [{ label: '大于', value: 'greaterThan' }]
     }
   },
   created() {
@@ -76,11 +102,19 @@ export default {
     formatterDate(row, column, cellValue) {
       return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n')
     },
-    create() {
-      
+    handleCreate() {
+      this.$router.push({ path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue' })
     },
-    delete() {
-
+    async handleDelete() {
+      await this.$confirm('确认删除？')
+      const promiseList = this.selectedRows.map(selectedRow => AV.Object.createWithoutData('Task', selectedRow.objectId));
+      AV.Object.destroyAll(promiseList);
+    },
+    handleSearch() {
+      this.searchDialogVisiable = true
+    },
+    handleRefresh() { 
+      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize)
     }
   },
   watch: {
