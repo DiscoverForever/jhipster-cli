@@ -7,14 +7,14 @@
       <el-button type="primary" size="medium" :plain="false" icon="el-icon-refresh" @click="handleRefresh">刷新</el-button>
     </el-button-group>
     <div class="table-wrapper">
-    <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="650" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange">
+    <el-table class="table" ref="multipleTable" :stripe="true" :border="true" :data="tableData" height="650" tooltip-effect="dark" highlight-current-row @selection-change="handleSelectionChange" @sort-change="onSortChange">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
       <%_ entity.body.forEach(prop => { _%>
-      <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>"></el-table-column>
+      <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>" sortable="custom"></el-table-column>
       <%_ })_%>
-      <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate" sortable></el-table-column>
-      <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable></el-table-column>
+      <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate" sortable="custom"></el-table-column>
+      <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable="custom"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
           <el-button @click="$router.push({path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue', query: {objectId: scope.row.objectId}})" type="text" size="small">查看</el-button>
@@ -72,6 +72,8 @@ export default {
       total: 0,
       selectedRows: [],
       searchDialogVisiable: false,
+      sortBy: 'createdAt',
+      sortType: 'ascending',
       form: {
         name: 1
       },
@@ -82,16 +84,18 @@ export default {
     this.queryEntityData();
   },
   methods: {
-    async queryEntityData(skip = 0, limit = 20) {
+    async queryEntityData(skip = 0, limit = 20, sortBy = 'createdBy', sortType = 'ascending') {
       const <%=entity.name%>Query = new AV.Query('<%=entity.name%>');
       <%=entity.name%>Query.skip(skip);
       <%=entity.name%>Query.limit(limit);
+      if (sortType === 'ascending') <%=entity.name%>Query.ascending(sortBy);
+      if (sortType === 'descending') <%=entity.name%>Query.descending(sortBy);
       const tableDataList = await <%=entity.name%>Query.find();
       this.tableData = tableDataList.map(item => item.toJSON());
       this.total = await (new AV.Query('<%=entity.name%>').count());
     },
-    handleSelectionChange() {
-      
+    handleSelectionChange(rows) {
+      this.selectedRows = rows;
     },
     handleCurrentChange(pageNumber) {
       this.pageNumber = pageNumber;
@@ -111,18 +115,23 @@ export default {
       AV.Object.destroyAll(promiseList);
     },
     handleSearch() {
-      this.searchDialogVisiable = true
+      this.searchDialogVisiable = true;
     },
     handleRefresh() { 
-      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize)
+      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize, this.sortBy, this.sortType);
+    },
+    onSortChange({ column, prop, order }) {
+      this.sortBy = prop;
+      this.sortType = order;
+      this.handleRefresh();
     }
   },
   watch: {
     'pageSize'() {
-      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize)
+      this.handleRefresh();
     },
     'pageNumber'() {
-      this.queryEntityData((this.pageNumber  - 1) * this.pageSize, this.pageSize)
+      this.handleRefresh();
     }
   }
 }
