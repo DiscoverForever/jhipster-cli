@@ -63,7 +63,7 @@ export default {
           try {
             const <%=entity.name.toLowerCase()%> = new AV.Object('<%=entity.name%>')
             <%_entity.body.forEach(prop => {_%>
-            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', this.formData.<%=prop.name%>)
+            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', <%=prop.type === 'Date' ? `new Date(this.formData.${prop.name})` : `this.formData.${prop.name}`%>)
             <%_})_%>
             await <%=entity.name.toLowerCase()%>.save();
             this.$message.success('创建成功');
