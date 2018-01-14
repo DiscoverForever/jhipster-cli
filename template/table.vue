@@ -11,7 +11,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
       <%_ entity.body.forEach(prop => { _%>
-      <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>" <%=prop.type==='Date' ? ':formatter="formatterDate"': ''%> sortable="custom"></el-table-column>
+      <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>" <%-prop.type==='Date' ? ':formatter="formatterDate"': ''%> sortable="custom"></el-table-column>
       <%_ })_%>
       <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate" sortable="custom"></el-table-column>
       <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable="custom"></el-table-column>
@@ -104,7 +104,7 @@ export default {
       this.pageSize = pageSize;
     },
     formatterDate(row, column, cellValue) {
-      return cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n')
+      return cellValue && cellValue.split('.')[0].replace(/[a-zA-Z]/g, '\n')
     },
     handleCreate() {
       this.$router.push({ path: '/entities/<%=entity.name%>/<%=entity.name%>-add.g.vue' })
