@@ -1,7 +1,7 @@
 /**主任务?ACL={'*':{read:true,write:true},'role:admin':{read:true,write:true}}*/
 entity Task {
 	/**标题*/
-	title String
+	title String required minlength(1) maxlength(42) pattern(/[A-Z]+/)
   /**描述*/
 	description String
   /**状态*/
