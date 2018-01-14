@@ -35,34 +35,13 @@
       :total="total">
       </el-pagination>
     </div>
-    <el-dialog title="查询条件" :visible.sync="searchDialogVisiable">
-      <el-form :model="form">
-        <el-form-item>
-          <el-select v-model="value5" multiple placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="value5" multiple placeholder="请选择">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入内容" v-model="input23">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="info" @click="searchDialogVisiable = false">添加条件</el-button>
-        <el-button @click="searchDialogVisiable = false">取 消</el-button>
-        <el-button type="primary" @click="searchDialogVisiable = false">确 定</el-button>
-      </div>
-    </el-dialog>
+    <dialog-search :visiable="searchDialogVisiable" @close="searchDialogVisiable = false" @confirm="onConfirm"></dialog-search>
   </div>
 </template>
 
 <script>
 import AV from 'leancloud-storage';
-
+import DialogSearch from './dialog-search';
 export default {
   data() {
     return {
@@ -73,13 +52,10 @@ export default {
       selectedRows: [],
       searchDialogVisiable: false,
       sortBy: 'createdAt',
-      sortType: 'ascending',
-      form: {
-        name: 1
-      },
-      options: [{ label: '大于', value: 'greaterThan' }]
+      sortType: 'ascending'
     }
   },
+  components: {DialogSearch},
   created() {
     this.queryEntityData();
   },
@@ -125,6 +101,10 @@ export default {
       this.sortBy = prop;
       this.sortType = order;
       this.handleRefresh();
+    },
+    // todo
+    onConfirm(params) {
+      console.log(params)
     }
   },
   watch: {
