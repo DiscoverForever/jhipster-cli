@@ -42,6 +42,9 @@ function generateEntities(jdl) {
       ejs.renderFile(path.join(__dirname, '..', 'template/table-edit.g.vue'), {entity, enums: jdl.enums}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}-edit.g.vue`), str);
       });
+      ejs.renderFile(path.join(__dirname, '..', 'template/table-dialog-search.g.vue'), {entity, enums: jdl.enums}, (err, str) => {
+        fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `dialog-search.g.vue`), str);
+      });
       ejs.renderFile(path.join(__dirname, '..', 'template/entity.ts'), {entity}, (err, str) => {
         fs.outputFileSync(path.join(CWD, `frontend/src/components/entities/${entity.name}`, `${entity.name}.g.ts`), str);
       });
