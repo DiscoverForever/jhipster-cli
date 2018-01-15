@@ -104,11 +104,20 @@ export default {
       required: false,
       default() {
         return [{
-          label: '主键',
+          label: 'objectId',
           type: 'String',
           name: 'objectId',
           value: 'objectId'
-        }]
+        },
+        <%entity.body.forEach(prop => {%>
+        {
+          label: '<%=prop.javadoc%>',
+          type: '<%=prop.type%>',
+          name: '<%=prop.name%>',
+          value: '<%=prop.name%>'
+        },
+        <%})%>
+        ]
       }
     },
     visiable: {
