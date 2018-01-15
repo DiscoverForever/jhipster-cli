@@ -41,7 +41,7 @@
 
 <script>
 import AV from 'leancloud-storage';
-import DialogSearch from './dialog-search';
+import DialogSearch from './dialog-search.g';
 export default {
   data() {
     return {
