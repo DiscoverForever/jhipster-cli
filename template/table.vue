@@ -60,12 +60,14 @@ export default {
     this.queryEntityData();
   },
   methods: {
-    async queryEntityData(skip = 0, limit = 20, sortBy = 'createdBy', sortType = 'ascending') {
+    async queryEntityData(skip = 0, limit = 20, sortBy = 'createdBy', sortType = 'ascending', conditions = []) {
       const <%=entity.name%>Query = new AV.Query('<%=entity.name%>');
       <%=entity.name%>Query.skip(skip);
       <%=entity.name%>Query.limit(limit);
-      if (sortType === 'ascending') <%=entity.name%>Query.ascending(sortBy);
-      if (sortType === 'descending') <%=entity.name%>Query.descending(sortBy);
+      //if (sortType === 'ascending') <%=entity.name%>Query.ascending(sortBy);
+      //if (sortType === 'descending') <%=entity.name%>Query.descending(sortBy);
+      <%=entity.name%>Query[sortType](sortBy);
+      conditions.forEach(condition => <%=entity.name%>Query[condition.condition](condition.key, condition.value));
       const tableDataList = await <%=entity.name%>Query.find();
       this.tableData = tableDataList.map(item => item.toJSON());
       this.total = await (new AV.Query('<%=entity.name%>').count());
@@ -102,9 +104,8 @@ export default {
       this.sortType = order;
       this.handleRefresh();
     },
-    // todo
     onConfirm(params) {
-      console.log(params)
+      this.queryEntityData((this.pageNumber - 1) * this.pageSize, this.pageSize, this.sortBy, this.sortType, params)
     }
   },
   watch: {
