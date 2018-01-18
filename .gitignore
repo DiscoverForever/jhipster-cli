@@ -70,7 +70,6 @@ hook/
 
 # ide
 .idea
-.vscode
 
 # test
 test/
