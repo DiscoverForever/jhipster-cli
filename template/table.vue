@@ -89,7 +89,7 @@ export default {
     },
     async handleDelete() {
       await this.$confirm('确认删除？')
-      const promiseList = this.selectedRows.map(selectedRow => AV.Object.createWithoutData('Task', selectedRow.objectId));
+      const promiseList = this.selectedRows.map(selectedRow => AV.Object.createWithoutData('<%=entity.name%>', selectedRow.objectId));
       await AV.Object.destroyAll(promiseList);
       await this.handleRefresh();
     },
