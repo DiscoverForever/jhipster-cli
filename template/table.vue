@@ -11,7 +11,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column width="250" prop="objectId" label="objectId"></el-table-column>
       <%_ entity.body.forEach(prop => { _%>
-      <el-table-column width="120" prop="<%=prop.name%>" label="<%=prop.javadoc%>" <%-prop.type==='Date' ? ':formatter="formatterDate"': ''%> sortable="custom"></el-table-column>
+      <el-table-column width="120" prop="<%=prop.type.startsWith('Pointer_') ? `${prop.name}.objectId` : prop.name%>" label="<%=prop.javadoc%>" <%-prop.type==='Date' ? ':formatter="formatterDate"': ''%> sortable="custom"></el-table-column>
       <%_ })_%>
       <el-table-column width="200" prop="createdAt" label="创建时间" :formatter="formatterDate" sortable="custom"></el-table-column>
       <el-table-column width="200" prop="updatedAt" label="更新时间" :formatter="formatterDate" sortable="custom"></el-table-column>
