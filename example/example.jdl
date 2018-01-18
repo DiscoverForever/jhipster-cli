@@ -10,6 +10,8 @@ entity Task {
   startDate Date
   /**是否开始*/
   isStart Boolean
+  /**关联用户*/
+  user Pointer__User
 }
 
 enum State {
