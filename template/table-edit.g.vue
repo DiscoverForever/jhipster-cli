@@ -1,5 +1,5 @@
 <template>
-  <div class="<%=entity.name%>-add">
+  <div class="<%=entity.name%>-edit">
     <el-form ref="form" :model="formData" label-width="80px">
       <%_entity.body.forEach(prop => {_%>
       <%_var rules = prop.validations.map(validate => {
@@ -25,6 +25,14 @@
           <el-option label="否" value="false"></el-option>
         </el-select>
         <%_}_%>
+        <%_if (prop.type.startsWith('Pointer')) {_%>
+        <el-select v-model="formData.<%=prop.name%>" placeholder="请选择">
+          <el-option :label="JSON.stringify(pointer)" :value="pointer.objectId" :key="pointer.id" v-for="pointer in pointers.find(pointer => pointer.className === '<%=prop.type.split('Pointer_')[1]%>').data"></el-option>
+        </el-select>
+        <%_ if (prop.type.startsWith('Pointer')) {_%>
+        <el-button @click="$router.push({path: '/entities/<%=prop.type.split('Pointer_')[1]%>/<%=prop.type.split('Pointer_')[1]%>-add.g.vue'})">创建<%=prop.javadoc%></el-button>
+        <%_}_%>
+        <%_}_%>
         <%_if (enums.find(enumItem => enumItem.name === prop.type)) {_%>
         <el-select v-model="formData.<%=prop.name%>" placeholder="请选择">
           <%_enums.find(enumItem => enumItem.name === prop.type).values.forEach((enumVal, index) => {_%>
@@ -46,14 +54,25 @@
 <script>
 import AV from 'leancloud-storage';
 export default {
-  name: '<%=entity.name%>-add',
+  name: '<%=entity.name%>-edit',
   data() {
     return {
       formData: {
         <%_entity.body.forEach(prop => {_%>
         <%=prop.name%>: '',
         <%_})_%>
-      }
+      },
+      pointers: [
+        <%_entity.body.forEach(prop => {_%>
+        <%_if (prop.type.startsWith('Pointer_')) {_%>
+        {
+          className: '<%=prop.type.split('Pointer_')[1]%>',
+          data: []
+        },
+        <%_}_%>
+        <%_})_%>
+        
+      ]
     };
   },
   props: {
@@ -64,6 +83,7 @@ export default {
   },
   created() {
     this.init()
+    this.initPointerData()
   },
   methods: {
     async init() {
@@ -77,7 +97,13 @@ export default {
           try {
             const <%=entity.name.toLowerCase()%> = AV.Object.createWithoutData('<%=entity.name%>', this.objectId)
             <%_entity.body.forEach(prop => {_%>
-            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', <%=prop.type === 'Date' ? `new Date(this.formData.${prop.name})` : `this.formData.${prop.name}`%>)
+            <%_ if(prop.type.startsWith('Pointer_')) { _%>
+            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', AV.Object.createWithoutData('<%=prop.type.split('Pointer_')[1]%>', this.formData.<%=prop.name%>))
+            <%_} else if (prop.type === 'Date') {_%>
+            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', new Date(this.formData.<%=prop.name%>))
+            <%_} else {_%>
+            <%=entity.name.toLowerCase()%>.set('<%=prop.name%>', this.formData.<%=prop.name%>)
+            <%_}_%>
             <%_})_%>
             await <%=entity.name.toLowerCase()%>.save();
             this.$message.success('修改成功');
@@ -91,6 +117,13 @@ export default {
     },
     onCancle() {
       this.$router.go(-1);
+    },
+    async initPointerData() {
+      this.pointers.forEach(async pointer => {
+        const query = new AV.Query(pointer.className);
+        const res = await query.find();
+        pointer.data = res.map(item => item.toJSON())
+      });
     }
   }
 }
