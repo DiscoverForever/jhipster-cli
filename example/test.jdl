@@ -1,0 +1,37 @@
+/**摄像头?ACL={'*':{read:true,write:true},'role:admin':{read:true,write:true}}*/
+entity Camera {
+	/**名称*/
+	name String required minlength(1) maxlength(42) pattern(/[A-Z]+/)
+  /**奔跑预警*/
+  runWarnState Boolean
+  /**挥手预警*/
+  waveWarnState Boolean
+  /**打架预警*/
+  fightWarnState Boolean
+  /**奔跑阈值*/
+  runWarnLimit String
+  /**挥手阈值*/
+  fightWarnLimit String
+  /**打架阈值*/
+  runWarnLimit String
+  /**状态*/
+  state State
+}
+enum State {
+  /**待办*/
+  BACKLOG,
+  /**进行中*/
+  IN_PROGRESS,
+  /**已完成*/
+  DONE,
+  /**已关闭*/
+  CLOSED
+}
+
+/**状态机*/
+STATEMACHINE State {
+  /**创建任务*/
+  start BACKLOG->IN_PROGRESS
+  /**关闭任务*/
+  close DONE->CLOSED
+}
